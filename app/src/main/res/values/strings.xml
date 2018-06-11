@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">AAQsAwesomeAndroidApp</string>
+    <string name="movie_API_citation">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
+    <string name="detail_error_message">Oops, couldn\'t get that movie.</string>
+
+    <string name="detail_name_label">Movie: </string>
+    <string name="detail_overview_label">Overview: </string>
+    <string name="detail_rating_label">Rating: </string>
+    <string name="detail_release_date">Released: </string>
+
+    <string name="poster_image_content_desc">Movie Poster Image</string>
+
 </resources>

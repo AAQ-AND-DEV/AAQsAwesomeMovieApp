@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_horizontal_padding">16dp</dimen>
+    <dimen name="activity_vertical_padding">16dp</dimen>
+
+    <dimen name="indicator_box_size_length">42dp</dimen>
+
+    <dimen name="small_text_size_details">12sp</dimen>
+    <dimen name="med_text_size_details">16sp</dimen>
+    <dimen name="large_text_size_details">24sp</dimen>
+
+    <dimen name="movie_poster_size">80dp</dimen>
+
+</resources>

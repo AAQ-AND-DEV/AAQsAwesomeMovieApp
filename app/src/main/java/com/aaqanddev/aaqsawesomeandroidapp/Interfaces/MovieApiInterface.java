@@ -1,5 +1,9 @@
 package com.aaqanddev.aaqsawesomeandroidapp.Interfaces;
 
+import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieList;
+import com.aaqanddev.aaqsawesomeandroidapp.pojo.MultipleResource;
+
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -15,7 +19,7 @@ public interface MovieApiInterface {
     */
 
     @GET("/api/movies?")
-    CALL<AaqMovieList> doGetMovieList(@Query("page") String page);
+    Call<AaqMovieList> doGetMovieList(@Query("page") String page);
 
 
 }

@@ -47,7 +47,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
         main_activity_movies = new LinkedList<>();
         setContentView(R.layout.activity_movies);
         moviesRv = (RecyclerView) findViewById(R.id.recyclerview_main_movies);
-        mAdapter = new MovieRVAdapter(getApplicationContext(), main_activity_movies, MoviesActivity.this);
+        mAdapter = new MovieRVAdapter(main_activity_movies, MoviesActivity.this);
         moviesRv.setLayoutManager(new GridLayoutManager(this, 2));
         moviesRv.setItemAnimator(new DefaultItemAnimator());
         moviesRv.setAdapter(mAdapter);

@@ -31,7 +31,7 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
 
         //private AdapterView.OnItemClickListener mOnClickListener;
         private final MainRecyclerViewClickListener mOnItemClickListener;
-        private Cursor mCursor;
+        //private Cursor mCursor;
         private int mId;
     //TODO()need to change this to be set where called
     public static final String size_poster_small = Resources.getSystem().getString(R.string.size_poster_small);
@@ -39,10 +39,10 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
 
 
 
-    public MovieRVAdapter(Context context, List<AaqMovie> movies, MainRecyclerViewClickListener onItemClickListener){
+    public MovieRVAdapter(List<AaqMovie> movies, MainRecyclerViewClickListener onItemClickListener){
 
-            mContext = context;
-            mInflater = LayoutInflater.from(context);
+            //mContext = context;
+
             mOnItemClickListener = onItemClickListener;
 
             mMovies = movies;
@@ -54,6 +54,7 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
         public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
             mContext = parent.getContext();
+            mInflater = LayoutInflater.from(mContext);
             View movieView = mInflater.inflate(R.layout.movies_rv_item, parent, false);
             movieView.setFocusable(true);
             MovieViewHolder movieViewHolder = new MovieViewHolder(movieView);
@@ -62,15 +63,9 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
 
         @Override
         public void onBindViewHolder(@NonNull MovieViewHolder holder, final int position) {
-
-
             //mCursor.moveToPosition(position);
             //final AaqMovie movie = mMovies.get(position);
-
             holder.bind(position);
-
-
-
         }
 
         @Override
@@ -123,10 +118,12 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
                 Toast.makeText(v.getContext(),"this works!",Toast.LENGTH_SHORT);
                 //TODO (I) direct to detailActivity
                 Intent detailIntent = new Intent(v.getContext(), MovieDetailActivity.class);
-               //TODO not sure what this is for? -- isn't this recursive?
-                //mOnItemClickListener.onClick(currMovie.getId());
-                detailIntent.putExtra("myMovie", currMovie);
 
+                //TODO not sure what this is for? -- isn't this recursive?
+                //mOnItemClickListener.onClick(currMovie.getId());
+
+                detailIntent.putExtra("myMovie", currMovie);
+                v.getContext().startActivity(detailIntent);
 
             }
         }

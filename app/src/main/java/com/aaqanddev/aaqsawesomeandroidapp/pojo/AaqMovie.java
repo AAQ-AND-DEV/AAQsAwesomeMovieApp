@@ -1,11 +1,24 @@
 
 package com.aaqanddev.aaqsawesomeandroidapp.pojo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AaqMovie {
+public class AaqMovie implements Parcelable {
+    public AaqMovie(Integer id, String overview, String posterPath, String title, Double voteAverage) {
+        this.id = id;
+        this.overview = overview;
+        this.posterPath = posterPath;
+        this.title = title;
+        this.voteAverage = voteAverage;
+    }
+
+    private Boolean isFavorite;
 
     @SerializedName("adult")
     @Expose
@@ -13,18 +26,22 @@ public class AaqMovie {
     @SerializedName("backdrop_path")
     @Expose
     private String backdropPath;
+    /*
     @SerializedName("belongs_to_collection")
     @Expose
     private Object belongsToCollection;
+    */
     @SerializedName("budget")
     @Expose
     private Integer budget;
     @SerializedName("genres")
     @Expose
     private List<Genre> genres = null;
+    /*
     @SerializedName("homepage")
     @Expose
     private Object homepage;
+    */
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -100,7 +117,7 @@ public class AaqMovie {
     public void setBackdropPath(String backdropPath) {
         this.backdropPath = backdropPath;
     }
-
+/*
     public Object getBelongsToCollection() {
         return belongsToCollection;
     }
@@ -108,7 +125,7 @@ public class AaqMovie {
     public void setBelongsToCollection(Object belongsToCollection) {
         this.belongsToCollection = belongsToCollection;
     }
-
+*/
     public Integer getBudget() {
         return budget;
     }
@@ -125,6 +142,7 @@ public class AaqMovie {
         this.genres = genres;
     }
 
+    /*
     public Object getHomepage() {
         return homepage;
     }
@@ -132,7 +150,7 @@ public class AaqMovie {
     public void setHomepage(Object homepage) {
         this.homepage = homepage;
     }
-
+*/
     public Integer getId() {
         return id;
     }
@@ -285,4 +303,87 @@ public class AaqMovie {
         this.voteCount = voteCount;
     }
 
+    public Boolean getFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.isFavorite);
+        dest.writeValue(this.adult);
+        dest.writeString(this.backdropPath);
+        //not  sure how to handle this, but I also don't think i need it
+        //dest.writeParcelable(this.belongsToCollection, flags);
+        dest.writeValue(this.budget);
+        dest.writeList(this.genres);
+        //also doesn't  seem necessary
+        //dest.writeParcelable(this.homepage, flags);
+        dest.writeValue(this.id);
+        dest.writeString(this.imdbId);
+        dest.writeString(this.originalLanguage);
+        dest.writeString(this.originalTitle);
+        dest.writeString(this.overview);
+        dest.writeValue(this.popularity);
+        dest.writeString(this.posterPath);
+        dest.writeString(this.releaseDate);
+        dest.writeValue(this.revenue);
+        dest.writeValue(this.runtime);
+        dest.writeList(this.spokenLanguages);
+        dest.writeString(this.status);
+        dest.writeString(this.tagline);
+        dest.writeString(this.title);
+        dest.writeValue(this.video);
+        dest.writeValue(this.voteAverage);
+        dest.writeValue(this.voteCount);
+    }
+
+    protected AaqMovie(Parcel in) {
+        this.isFavorite = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.adult = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.backdropPath = in.readString();
+        //this.belongsToCollection = in.readParcelable(Object.class.getClassLoader());
+        this.budget = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.genres = new ArrayList<Genre>();
+        in.readList(this.genres, Genre.class.getClassLoader());
+        //this.homepage = in.readParcelable(Object.class.getClassLoader());
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.imdbId = in.readString();
+        this.originalLanguage = in.readString();
+        this.originalTitle = in.readString();
+        this.overview = in.readString();
+        this.popularity = (Double) in.readValue(Double.class.getClassLoader());
+        this.posterPath = in.readString();
+        this.releaseDate = in.readString();
+        this.revenue = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.runtime = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.spokenLanguages = new ArrayList<SpokenLanguage>();
+        in.readList(this.spokenLanguages, SpokenLanguage.class.getClassLoader());
+        this.status = in.readString();
+        this.tagline = in.readString();
+        this.title = in.readString();
+        this.video = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.voteAverage = (Double) in.readValue(Double.class.getClassLoader());
+        this.voteCount = (Integer) in.readValue(Integer.class.getClassLoader());
+    }
+
+    public static final Creator<AaqMovie> CREATOR = new Creator<AaqMovie>() {
+        @Override
+        public AaqMovie createFromParcel(Parcel source) {
+            return new AaqMovie(source);
+        }
+
+        @Override
+        public AaqMovie[] newArray(int size) {
+            return new AaqMovie[size];
+        }
+    };
 }

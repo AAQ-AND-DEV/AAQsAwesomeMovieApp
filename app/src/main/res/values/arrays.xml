@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="pref_fetch_by_labels">
+        <item>@string/fetch_by_pop_label</item>
+        <item>@string/fetch_by_rating_label</item>
+    </array>
+
+    <array name="pref_fetch_by_vals">
+        <item>@string/fetch_by_pop</item>
+        <item>@string/fetch_by_rating</item>
+
+    </array>
+
+</resources>

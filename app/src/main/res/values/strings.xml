@@ -10,4 +10,28 @@
 
     <string name="poster_image_content_desc">Movie Poster Image</string>
 
+    <!--Preferences -->
+    <string name="my_prefs_label">MyPrefs</string>
+    <string name="search_param_spinner_label">Sort By:</string>
+
+    <!--Bundle Key -->
+    <string name="bundle_movies_key">movies_key</string>
+    <string name="bundle_movie_detail_key">movie_passed_key</string>
+
+    <!-- strings for the spinner adapter arrays should this
+    just be top_rated or popular (making it easier?)-->
+    <string name="fetch_by_rating_label">by RATING</string>
+    <string name="fetch_by_pop_label">by POPULARITY</string>
+
+    <string name="fetch_by_pop">popular</string>
+    <string name="fetch_by_rating">top_rated</string>
+
+    <!-- Endpoint paths and Queries -->
+    <string name="lang_default">en-US</string>
+    <string name="page_default">1</string>
+    <string name="fetch_by_rating_JSON_key">top_rated</string>
+    <string name="fetch_by_pop_JSON_key">popular</string>
+    <string name="sort_param_default">@string/fetch_by_rating</string>
+    <string name="size_poster_large">w185</string>
+    <string name="size_poster_small">w92</string>
 </resources>

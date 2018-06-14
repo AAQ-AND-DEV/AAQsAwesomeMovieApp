@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,8 +22,8 @@ import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieList;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +36,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
     private MovieRVAdapter mAdapter;
     MovieApiInterface movieApiInterface;
     MovieRVAdapter.MainRecyclerViewClickListener mMainRVlistener;
+    //TODO move spinner to AppBar(is that what topBar is called?
     Spinner sortSpinner;
     AdapterView.OnItemSelectedListener onSortSelectedChangeListener;
     String mSortChoice;
@@ -43,32 +45,59 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        main_activity_movies = new LinkedList<>();
+        main_activity_movies = new ArrayList<>(20);
         setContentView(R.layout.activity_movies);
         moviesRv = (RecyclerView) findViewById(R.id.recyclerview_main_movies);
-        mAdapter = new MovieRVAdapter(main_activity_movies, MoviesActivity.this);
+        //look closely here -- I must figure out how to use  onItemClickListener here or elsewhere
+        mAdapter = new MovieRVAdapter( main_activity_movies, this);
         moviesRv.setLayoutManager(new GridLayoutManager(this, 2));
+        moviesRv.setHasFixedSize(true);
         moviesRv.setItemAnimator(new DefaultItemAnimator());
         moviesRv.setAdapter(mAdapter);
 
         sortSpinner = (Spinner) findViewById(R.id.sort_pref_spinner);
         ArrayAdapter<CharSequence> sortSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.pref_fetch_by_labels, android.R.layout.simple_spinner_item);
         sortSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         sortSpinner.setAdapter(sortSpinnerAdapter);
+        sortSpinner.setSelection(0);
         sortSpinner.setOnItemSelectedListener(this);
 
-        Retrofit movieRetro = MoviesAPIClient.getClientBuilder().build();
-        movieApiInterface = movieRetro.create(MovieApiInterface.class);
-        getData();
+        if (savedInstanceState == null || !savedInstanceState.containsKey("movies")){
+            main_activity_movies = new ArrayList<>(20);
+            //etc.
+            Retrofit movieRetro = MoviesAPIClient.getClientBuilder().build();
+            movieApiInterface = movieRetro.create(MovieApiInterface.class);
+            getData();
+        }
+        else{
+            main_activity_movies = savedInstanceState.getParcelableArrayList("movies");
+        }
+
+
+
 
 
     }
 
-    //Must implement parcelable -- should I check on additional variables like the favoritesList?
+
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
+        outState.putParcelableArrayList("movies", new ArrayList<AaqMovie>(mAdapter.getMovies()));
+    }
+
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState == null || !savedInstanceState.containsKey("movies")){
+            getData();
+        } else {
+            main_activity_movies = savedInstanceState.getParcelableArrayList("movies");
+
+        }
+
     }
 
     private void getData(){
@@ -90,7 +119,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
                 //had toasted: */pageText + "page\n" + total + "total\n" + totalPages + "totalPages\n"*/
                 //Toast.makeText(getApplicationContext(), "something", Toast.LENGTH_SHORT).show();
 
-                List<AaqMovie> movies = new LinkedList<>(movieList);
+                List<AaqMovie> movies = new ArrayList<>(movieList);
 /*
                 for (AaqMovie aaqMovie: movieList){
 
@@ -112,9 +141,22 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     @Override
-    public void onClick(int movieId) {
-        //Direct to Detail_Activity
-        Toast.makeText(this, "i can click", Toast.LENGTH_SHORT);
+    public void onClick(final int movieId) {
+        //TODO(Q) do I want to do anything with this?
+        //this is getting called by line 124 in MovieRVAdapter mOnItemClickListener.onClick();
+        //Direct to Detail_Activity? Already doing that from onClick handle in ViewHolder
+
+        //could make an API call here
+        //but I think i should be making a call to the RVadapter
+        //could filter the list of movies (while small) to find the matching movieId
+        //is there a special way to access cache from Retrofit,
+        // or better way to store so it's filterable, other than as List<AaqMovie>?
+        // do I need to do anything here at all, perhaps this is where I should launchActivity?
+        List<AaqMovie> res = main_activity_movies.stream()
+                .filter(movie -> movieId == movie.getId()).collect(Collectors.toList());
+        AaqMovie movie = res.get(0);
+        Toast.makeText(this, "i can click and get "+movie.getTitle()+" is surely great?", Toast.LENGTH_SHORT);
+
     }
 
     @Override

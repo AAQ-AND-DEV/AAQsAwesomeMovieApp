@@ -34,4 +34,5 @@
     <string name="sort_param_default">@string/fetch_by_rating</string>
     <string name="size_poster_large">w185</string>
     <string name="size_poster_small">w92</string>
+    <string name="size_poster_rv_default">@string/size_poster_small</string>
 </resources>

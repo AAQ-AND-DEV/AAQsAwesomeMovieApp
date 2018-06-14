@@ -25,23 +25,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adapter<MovieRVAdapter.MovieViewHolder>{
-        private Context mContext;
+
         private List<AaqMovie> mMovies;
         private LayoutInflater mInflater;
-
-        //private AdapterView.OnItemClickListener mOnClickListener;
         private final MainRecyclerViewClickListener mOnItemClickListener;
         //private Cursor mCursor;
+        private Context mContext;
         private int mId;
     //TODO()need to change this to be set where called
-    public static final String size_poster_small = Resources.getSystem().getString(R.string.size_poster_small);
-    public static final String size_poster_default = size_poster_small ;
 
 
 
-    public MovieRVAdapter(List<AaqMovie> movies, MainRecyclerViewClickListener onItemClickListener){
 
-            //mContext = context;
+    public MovieRVAdapter( List<AaqMovie> movies, MainRecyclerViewClickListener onItemClickListener){
+
+           // mContext = context;
 
             mOnItemClickListener = onItemClickListener;
 
@@ -49,14 +47,16 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
 
         }
 
+
         @NonNull
         @Override
         public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-            mContext = parent.getContext();
-            mInflater = LayoutInflater.from(mContext);
+            Context parentContext = parent.getContext();
+            mInflater = LayoutInflater.from(parentContext);
             View movieView = mInflater.inflate(R.layout.movies_rv_item, parent, false);
             movieView.setFocusable(true);
+            movieView.setClickable(true);
             MovieViewHolder movieViewHolder = new MovieViewHolder(movieView);
             return movieViewHolder;
         }
@@ -73,6 +73,9 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
             return mMovies.size();
         }
 
+        //TODO (d) should I add a getItemViewType(int) override?
+        //I think when I add landscape layouts, this is important
+
         public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 
@@ -87,7 +90,7 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
 
                 title_tv = (TextView) itemView.findViewById(R.id.item_movie_name);
                 poster_iv = (ImageView) itemView.findViewById(R.id.item_iv_movie_poster);
-                //itemView.setOnClickListener(this);
+
             }
 
             public void bind( int pos) {
@@ -96,7 +99,7 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
 //I predict this code compiles to the following
                 Picasso.with(poster_iv.getContext())
                         .load(                                      //this should depend on calling activity, right?
-                                MoviesAPIClient.buildMoviePosterUrl(size_poster_default, currMovie.getPosterPath()).toString())
+                                MoviesAPIClient.buildMoviePosterUrl(mContext.getResources().getString(R.string.size_poster_rv_default), currMovie.getPosterPath()).toString())
                         .fit().centerCrop()
                         .placeholder(R.drawable.ic_movie_poster_paceholder)
                         .error(R.drawable.ic_error_face)
@@ -119,14 +122,20 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
                 //TODO (I) direct to detailActivity
                 Intent detailIntent = new Intent(v.getContext(), MovieDetailActivity.class);
 
-                //TODO not sure what this is for? -- isn't this recursive?
-                //mOnItemClickListener.onClick(currMovie.getId());
+                //TODO not sure what this is for? --
+                //relocating to onClick in MainActivity
+                mOnItemClickListener.onClick(currMovie.getId());
 
                 detailIntent.putExtra("myMovie", currMovie);
                 v.getContext().startActivity(detailIntent);
 
             }
+
         }
+    public List<AaqMovie> getMovies(){
+        return mMovies;
+    }
+
 
         public interface MainRecyclerViewClickListener {
 

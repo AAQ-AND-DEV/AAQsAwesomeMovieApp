@@ -10,6 +10,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class AaqMovie implements Parcelable {
+    /*
     public AaqMovie(Integer id, String overview, String posterPath, String title, Double voteAverage) {
         this.id = id;
         this.overview = overview;
@@ -17,7 +18,7 @@ public class AaqMovie implements Parcelable {
         this.title = title;
         this.voteAverage = voteAverage;
     }
-
+*/
     private Boolean isFavorite;
 
     @SerializedName("adult")

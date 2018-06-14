@@ -21,6 +21,7 @@ import com.aaqanddev.aaqsawesomeandroidapp.Utilities.SecretApiConstant;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieList;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -101,15 +102,21 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     private void getData(){
-        Call<List<AaqMovie>> movieListCall = movieApiInterface
+        Call<AaqMovieList> movieListCall = movieApiInterface
                 .doGetMovieList(getResources().getStringArray(R.array.pref_fetch_by_vals)[sortSpinner.getSelectedItemPosition()]
                         , SecretApiConstant.movieApiConstant,
                         getResources().getString(R.string.lang_default), getResources().getString(R.string.page_default));
-        movieListCall.enqueue(new Callback<List<AaqMovie>>(){
+        movieListCall.enqueue(new Callback<AaqMovieList>(){
 
             @Override
-            public void onResponse(Call<List<AaqMovie>> call, Response<List<AaqMovie>> response) {
-                List<AaqMovie> movieList = response.body();
+            public void onResponse(Call<AaqMovieList> call, Response<AaqMovieList> response) {
+               ArrayList<AaqMovie> currList = new ArrayList<AaqMovie>();
+                if (response.isSuccessful()){
+                   for (AaqMovie movie : response.body().getMovies()){
+                       currList.add(movie);
+                   }
+               }
+               main_activity_movies = currList;
 
 /*                Integer pageText = movieList.page;
                 Integer total = movieList.total;
@@ -118,22 +125,16 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
                 //List<AaqMovieList.Datum> datumList = movieList.data;
                 //had toasted: */pageText + "page\n" + total + "total\n" + totalPages + "totalPages\n"*/
                 //Toast.makeText(getApplicationContext(), "something", Toast.LENGTH_SHORT).show();
+                   // List<AaqMovie> movies = new ArrayList<AaqMovie>(movieList);
 
-                List<AaqMovie> movies = new ArrayList<>(movieList);
-/*
-                for (AaqMovie aaqMovie: movieList){
-
-                    movies.add(new AaqMovie(datum.id, datum.overview, datum.posterPath, datum.title, datum.voteAverage));
-                }
-  */
-                //TODO(Q) I also need to
-                main_activity_movies = movies;
+               //TODO(Q) I also need to
+                //main_activity_movies = movies;
 
                 mAdapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onFailure(Call<List<AaqMovie>> call, Throwable t) {
+            public void onFailure(Call<AaqMovieList> call, Throwable t) {
                 Toast.makeText(MoviesActivity.this, "error: cancelling call", Toast.LENGTH_SHORT).show();
                 call.cancel();
             }

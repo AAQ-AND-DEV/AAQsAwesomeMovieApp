@@ -37,7 +37,7 @@ public interface MovieApiInterface {
 
     //TODO (add params)
     @GET("/3/movie/{sortParam}")
-    Call<List<AaqMovie>> doGetMovieList(@Path("sortParam") String sort,  @Query("api_key") String apiKey, @Query("language") String language, @Query("page") String page);
+    Call<AaqMovieList> doGetMovieList(@Path("sortParam") String sort,  @Query("api_key") String apiKey, @Query("language") String language, @Query("page") String page);
 
 
 

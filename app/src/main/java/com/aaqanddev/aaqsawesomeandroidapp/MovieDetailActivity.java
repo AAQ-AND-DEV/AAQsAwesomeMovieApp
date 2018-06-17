@@ -22,7 +22,11 @@ public class MovieDetailActivity extends AppCompatActivity {
        ActivityMovieDetailBinding viewDataBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail);
         AaqMovie thisMovie = getIntent().getParcelableExtra("myMovie");
         viewDataBinding.setMovie(thisMovie);
-
+        viewDataBinding.movieDetailTitle.setContentDescription(getString(R.string.ally_movie_title));
+        viewDataBinding.movieDetailReleaseDate.setContentDescription(getString(R.string.ally_movie_date));
+        viewDataBinding.movieDetailSummary.setContentDescription(getString(R.string.ally_movie_desc));
+        viewDataBinding.movieDetailVoteAverage.setContentDescription(getString(R.string.ally_movie_vote_ave));
+        viewDataBinding.movieDetailPosterIv.setContentDescription(getString(R.string.ally_movie_poster_image));
     }
 
     @Override

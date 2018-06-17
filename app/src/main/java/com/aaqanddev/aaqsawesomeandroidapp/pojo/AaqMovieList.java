@@ -7,9 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AaqMovieList  {
-    @SerializedName("aaqmovie")
-    @Expose
-    private List<AaqMovie> movies = new ArrayList<>();
+
+    private List<AaqMovie> results = new ArrayList<>();
     /*
     @SerializedName("page")
     public Integer page;
@@ -22,7 +21,7 @@ public class AaqMovieList  {
     */
 
     public List<AaqMovie> getMovies(){
-        return movies;
+        return results;
     }
 
 }

@@ -10,6 +10,13 @@
 
     <string name="poster_image_content_desc">Movie Poster Image</string>
 
+    <!-- Ally -->
+    <string name="ally_movie_title">movie title</string>
+    <string name="ally_movie_desc">movie summary</string>
+    <string name="ally_movie_poster_image">movie poster</string>
+    <string name="ally_movie_date">movie release date</string>
+    <string name="ally_movie_vote_ave">movie vote average</string>
+
     <!--Preferences -->
     <string name="my_prefs_label">MyPrefs</string>
     <string name="search_param_spinner_label">Sort By:</string>

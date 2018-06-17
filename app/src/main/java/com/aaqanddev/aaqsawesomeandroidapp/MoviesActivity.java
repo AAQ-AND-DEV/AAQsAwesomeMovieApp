@@ -65,7 +65,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
         sortSpinner.setOnItemSelectedListener(this);
 
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")){
-            main_activity_movies = new ArrayList<>(20);
+
             //etc.
             Retrofit movieRetro = MoviesAPIClient.getClientBuilder().build();
             movieApiInterface = movieRetro.create(MovieApiInterface.class);

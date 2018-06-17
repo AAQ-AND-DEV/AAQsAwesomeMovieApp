@@ -96,6 +96,7 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
             public void bind( int pos) {
                 currMovie = mMovies.get(pos);
                 title_tv.setText(currMovie.getTitle());
+                title_tv.setContentDescription(itemView.getResources().getString(R.string.ally_movie_title));
 //I predict this code compiles to the following
                 Picasso.with(poster_iv.getContext())
                         .load(                                      //this should depend on calling activity, right?
@@ -104,6 +105,7 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
                         .placeholder(R.drawable.ic_movie_poster_paceholder)
                         .error(R.drawable.ic_error_face)
                         .into(poster_iv);
+                poster_iv.setContentDescription(itemView.getResources().getString(R.string.ally_movie_poster_image));
   /*
                 Picasso.Builder builder = new Picasso.Builder(mContext);
                 builder.downloader(new OkHttpDownloader(mContext));

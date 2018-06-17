@@ -23,6 +23,7 @@ import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieList;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,13 +49,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
         super.onCreate(savedInstanceState);
         main_activity_movies = new ArrayList<>(20);
         setContentView(R.layout.activity_movies);
-        moviesRv = (RecyclerView) findViewById(R.id.recyclerview_main_movies);
-        //look closely here -- I must figure out how to use  onItemClickListener here or elsewhere
-        mAdapter = new MovieRVAdapter( main_activity_movies, this);
-        moviesRv.setLayoutManager(new GridLayoutManager(this, 2));
-        moviesRv.setHasFixedSize(true);
-        moviesRv.setItemAnimator(new DefaultItemAnimator());
-        moviesRv.setAdapter(mAdapter);
+
 
         sortSpinner = (Spinner) findViewById(R.id.sort_pref_spinner);
         ArrayAdapter<CharSequence> sortSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.pref_fetch_by_labels, android.R.layout.simple_spinner_item);
@@ -64,20 +59,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
         sortSpinner.setSelection(0);
         sortSpinner.setOnItemSelectedListener(this);
 
-        if (savedInstanceState == null || !savedInstanceState.containsKey("movies")){
-
-            //etc.
-            Retrofit movieRetro = MoviesAPIClient.getClientBuilder().build();
-            movieApiInterface = movieRetro.create(MovieApiInterface.class);
-            getData();
-        }
-        else{
-            main_activity_movies = savedInstanceState.getParcelableArrayList("movies");
-        }
-
-
-
-
+        initViews(savedInstanceState);
 
     }
 
@@ -102,45 +84,62 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     private void getData(){
-        Call<AaqMovieList> movieListCall = movieApiInterface
-                .doGetMovieList(getResources().getStringArray(R.array.pref_fetch_by_vals)[sortSpinner.getSelectedItemPosition()]
-                        , SecretApiConstant.movieApiConstant,
-                        getResources().getString(R.string.lang_default), getResources().getString(R.string.page_default));
-        movieListCall.enqueue(new Callback<AaqMovieList>(){
+           //etc.
+            Retrofit movieRetro = MoviesAPIClient.getClientBuilder().build();
+            movieApiInterface = movieRetro.create(MovieApiInterface.class);
+            Call<AaqMovieList> movieListCall = movieApiInterface
+                    .doGetMovieList(getResources().getStringArray(R.array.pref_fetch_by_vals)[sortSpinner.getSelectedItemPosition()]
+                            , SecretApiConstant.movieApiConstant,
+                            getResources().getString(R.string.lang_default), getResources().getString(R.string.page_default));
+            movieListCall.enqueue(new Callback<AaqMovieList>(){
 
-            @Override
-            public void onResponse(Call<AaqMovieList> call, Response<AaqMovieList> response) {
-               ArrayList<AaqMovie> currList = new ArrayList<AaqMovie>();
-                if (response.isSuccessful()){
-                   for (AaqMovie movie : response.body().getMovies()){
-                       currList.add(movie);
-                   }
-               }
-               main_activity_movies = currList;
+                @Override
+                public void onResponse(Call<AaqMovieList> call, Response<AaqMovieList> response) {
+                    ArrayList<AaqMovie> currList = new ArrayList<AaqMovie>();
+                    if (response.isSuccessful()){
+                        AaqMovieList res = response.body();
+                        currList = new ArrayList<AaqMovie>(res.getMovies());
+                        mAdapter = new MovieRVAdapter(currList, mMainRVlistener);
+                        moviesRv.setAdapter(mAdapter);
+                    }
+                    main_activity_movies = currList;
 
 /*                Integer pageText = movieList.page;
                 Integer total = movieList.total;
                 Integer totalPages = movieList.totalPages;
   */
-                //List<AaqMovieList.Datum> datumList = movieList.data;
-                //had toasted: */pageText + "page\n" + total + "total\n" + totalPages + "totalPages\n"*/
-                //Toast.makeText(getApplicationContext(), "something", Toast.LENGTH_SHORT).show();
-                   // List<AaqMovie> movies = new ArrayList<AaqMovie>(movieList);
+                    //List<AaqMovieList.Datum> datumList = movieList.data;
+                    //had toasted: */pageText + "page\n" + total + "total\n" + totalPages + "totalPages\n"*/
+                    //Toast.makeText(getApplicationContext(), "something", Toast.LENGTH_SHORT).show();
+                    // List<AaqMovie> movies = new ArrayList<AaqMovie>(movieList);
 
-               //TODO(Q) I also need to
-                //main_activity_movies = movies;
+                    //TODO(Q) doI also need to do this?
+                    //mAdapter.notifyDataSetChanged();
+                }
 
-                mAdapter.notifyDataSetChanged();
-            }
+                @Override
+                public void onFailure(Call<AaqMovieList> call, Throwable t) {
+                    Toast.makeText(MoviesActivity.this, "error: cancelling call", Toast.LENGTH_SHORT).show();
+                    call.cancel();
+                }
+            } );
+        }
 
-            @Override
-            public void onFailure(Call<AaqMovieList> call, Throwable t) {
-                Toast.makeText(MoviesActivity.this, "error: cancelling call", Toast.LENGTH_SHORT).show();
-                call.cancel();
-            }
-        } );
+
+    private void initViews( Bundle savedInstanceState){
+        moviesRv = (RecyclerView) findViewById(R.id.recyclerview_main_movies);
+        //look closely here -- I must figure out how to use  onItemClickListener here or elsewhere
+        //mAdapter = new MovieRVAdapter( main_activity_movies, this);
+        moviesRv.setLayoutManager(new GridLayoutManager(this, 2));
+        moviesRv.setHasFixedSize(true);
+        moviesRv.setItemAnimator(new DefaultItemAnimator());
+        //moviesRv.setAdapter(mAdapter);
+        if (savedInstanceState == null || !savedInstanceState.containsKey("movies")){
+            getData();
+        } else {
+            main_activity_movies = savedInstanceState.getParcelableArrayList("movies");
+        }
     }
-
     @Override
     public void onClick(final int movieId) {
         //TODO(Q) do I want to do anything with this?

@@ -1,6 +1,8 @@
 
 package com.aaqanddev.aaqsawesomeandroidapp.pojo;
 
+import android.content.pm.FeatureGroupInfo;
+import android.graphics.Region;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -103,6 +105,7 @@ public class AaqMovie implements Parcelable {
     @Expose
     private Integer voteCount;
 
+//region getters and setters
     public Boolean getAdult() {
         return adult;
     }
@@ -311,6 +314,7 @@ public class AaqMovie implements Parcelable {
     public void setFavorite(Boolean favorite) {
         isFavorite = favorite;
     }
+//endregion
 
     @Override
     public int describeContents() {

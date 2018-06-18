@@ -21,19 +21,14 @@ public class AaqMovie implements Parcelable {
         this.voteAverage = voteAverage;
     }
 */
+    public AaqMovie(){
+
+    }
+    public  AaqMovie(String title){
+        this.title = title;
+    }
+
     private Boolean isFavorite;
-
-    public List<AaqMovie> getResults() {
-        return results;
-    }
-
-    public void setResults(List<AaqMovie> results) {
-        this.results = results;
-    }
-
-    @SerializedName("results")
-    @Expose
-    private List<AaqMovie> results;
 
 
 

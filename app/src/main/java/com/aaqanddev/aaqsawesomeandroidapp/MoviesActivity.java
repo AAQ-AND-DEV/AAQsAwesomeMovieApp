@@ -98,11 +98,15 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
                 public void onResponse(Call<AaqMovieList> call, Response<AaqMovieList> response) {
                     ArrayList<AaqMovie> currList = new ArrayList<AaqMovie>();
                     if (response.isSuccessful()){
-                        AaqMovieList res = response.body();
-                        currList = new ArrayList<AaqMovie>(res.getMovies());
+                        AaqMovieList jsonReturned  = response.body();
+                        System.out.println("json returned: " + jsonReturned.toString());
+                        int pgs = response.body().getPage();
+                        System.out.println("no. pgs: " + pgs );
+                        main_activity_movies = response.body().getMovies();
 
+                        mAdapter.notifyDataSetChanged();
                     }
-                    main_activity_movies = currList;
+
 
 /*                Integer pageText = movieList.page;
                 Integer total = movieList.total;
@@ -113,8 +117,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
                     //Toast.makeText(getApplicationContext(), "something", Toast.LENGTH_SHORT).show();
                     // List<AaqMovie> movies = new ArrayList<AaqMovie>(movieList);
 
-                    //TODO(Q) doI also need to do this?
-                    mAdapter.notifyDataSetChanged();
+
                 }
 
                 @Override
@@ -128,8 +131,6 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
 
     private void initViews( Bundle savedInstanceState){
         moviesRv = (RecyclerView) findViewById(R.id.recyclerview_main_movies);
-        //look closely here -- I must figure out how to use  onItemClickListener here or elsewhere
-        //mAdapter = new MovieRVAdapter( main_activity_movies, this);
         moviesRv.setLayoutManager(new GridLayoutManager(this, 2));
         moviesRv.setHasFixedSize(true);
         moviesRv.setItemAnimator(new DefaultItemAnimator());
@@ -140,6 +141,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
             getData();
         } else {
             main_activity_movies = savedInstanceState.getParcelableArrayList("movies");
+            mAdapter.notifyDataSetChanged();
         }
     }
     @Override
@@ -157,7 +159,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
         List<AaqMovie> res = main_activity_movies.stream()
                 .filter(movie -> movieId == movie.getId()).collect(Collectors.toList());
         AaqMovie movie = res.get(0);
-        Toast.makeText(this, "i can click and get "+movie.getTitle()+" is surely great?", Toast.LENGTH_SHORT);
+        Toast.makeText(this, "i can click and get "+movie.getTitle()+" is surely great?", Toast.LENGTH_SHORT).show();
 
     }
 

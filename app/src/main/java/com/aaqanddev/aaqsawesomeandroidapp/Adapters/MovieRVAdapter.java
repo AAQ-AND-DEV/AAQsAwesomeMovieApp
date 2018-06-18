@@ -28,7 +28,7 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
 
         private List<AaqMovie> mMovies;
         private LayoutInflater mInflater;
-        private final MainRecyclerViewClickListener mOnItemClickListener;
+        private MainRecyclerViewClickListener mOnItemClickListener;
         //private Cursor mCursor;
         private Context mContext;
         private int mId;
@@ -70,6 +70,9 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
 
         @Override
         public int getItemCount() {
+            if (mMovies == null){
+                return  0;
+            }
             return mMovies.size();
         }
 

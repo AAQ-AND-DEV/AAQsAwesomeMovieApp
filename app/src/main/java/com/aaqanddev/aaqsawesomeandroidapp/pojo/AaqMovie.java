@@ -23,6 +23,20 @@ public class AaqMovie implements Parcelable {
 */
     private Boolean isFavorite;
 
+    public List<AaqMovie> getResults() {
+        return results;
+    }
+
+    public void setResults(List<AaqMovie> results) {
+        this.results = results;
+    }
+
+    @SerializedName("results")
+    @Expose
+    private List<AaqMovie> results;
+
+
+
     @SerializedName("adult")
     @Expose
     private Boolean adult;

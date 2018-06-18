@@ -47,8 +47,9 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        main_activity_movies = new ArrayList<>(20);
+        //main_activity_movies = new ArrayList<>(20);
         setContentView(R.layout.activity_movies);
+
 
 
         sortSpinner = (Spinner) findViewById(R.id.sort_pref_spinner);
@@ -99,8 +100,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
                     if (response.isSuccessful()){
                         AaqMovieList res = response.body();
                         currList = new ArrayList<AaqMovie>(res.getMovies());
-                        mAdapter = new MovieRVAdapter(currList, mMainRVlistener);
-                        moviesRv.setAdapter(mAdapter);
+
                     }
                     main_activity_movies = currList;
 
@@ -114,7 +114,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
                     // List<AaqMovie> movies = new ArrayList<AaqMovie>(movieList);
 
                     //TODO(Q) doI also need to do this?
-                    //mAdapter.notifyDataSetChanged();
+                    mAdapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -133,7 +133,9 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
         moviesRv.setLayoutManager(new GridLayoutManager(this, 2));
         moviesRv.setHasFixedSize(true);
         moviesRv.setItemAnimator(new DefaultItemAnimator());
-        //moviesRv.setAdapter(mAdapter);
+        mAdapter = new MovieRVAdapter(main_activity_movies, this);
+        moviesRv.setAdapter(mAdapter);
+
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")){
             getData();
         } else {

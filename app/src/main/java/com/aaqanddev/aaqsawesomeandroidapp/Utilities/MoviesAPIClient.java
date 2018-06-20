@@ -23,8 +23,11 @@ public class MoviesAPIClient {
     public static final String base_URL_movieDB = "https://api.themoviedb.org/3/";
     public static final Uri buildBaseUri = Uri.parse(base_URL_movieDB);
 
-    public static final String base_Image_Url = "https://image.tmdb.org/t/p/";
-    public static final Uri buildBasePosterUri = Uri.parse(base_Image_Url);
+    //http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
+    public static final String base_Image_auth = "image.tmdb.org";
+    //public static final Uri buildBasePosterUri = ;
+    public static final String sub_path_poster_1 = "t";
+    public static final String sub_path_poster_2 ="p";
 
 
 
@@ -48,15 +51,20 @@ public class MoviesAPIClient {
         return retroMovieBuilder;
     }
 
-
+    //should this return a url or a string?
     public static URL buildMoviePosterUrl(String posterSize, String posterPath){
-        Uri fetchUri = buildBasePosterUri.buildUpon()
-                .path(posterSize)
-                .path(posterPath)
-                .build();
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority(base_Image_auth)
+                .appendPath(sub_path_poster_1)
+                .appendPath(sub_path_poster_2)
+                .appendPath(posterSize)
+                .appendEncodedPath(posterPath);
+
+        Uri fetchUri = builder.build();
 
         URL fetch_url = null;
-
+        Log.d("poster call uri: ", fetchUri.toString());
         try{
             fetch_url = new URL(fetchUri.toString());
             Log.d("API ", fetch_url.toString());

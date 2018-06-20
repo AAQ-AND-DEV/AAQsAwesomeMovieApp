@@ -39,7 +39,8 @@
     <string name="fetch_by_rating_JSON_key">top_rated</string>
     <string name="fetch_by_pop_JSON_key">popular</string>
     <string name="sort_param_default">@string/fetch_by_rating</string>
-    <string name="size_poster_large">w185</string>
-    <string name="size_poster_small">w92</string>
+    <string name="size_poster_small">w185</string>
+    <string name="large">w780</string>
+    <string name="poster_fetch_sub_path">t/p/</string>
     <string name="size_poster_rv_default">@string/size_poster_small</string>
 </resources>

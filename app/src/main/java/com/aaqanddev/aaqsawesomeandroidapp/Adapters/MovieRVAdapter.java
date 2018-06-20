@@ -61,6 +61,14 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
             return movieViewHolder;
         }
 
+        public  void  updateData(List<AaqMovie> newData){
+            if (mMovies!= null){
+                mMovies.clear();
+
+            }
+            mMovies.addAll(newData);
+            notifyDataSetChanged();
+        }
         @Override
         public void onBindViewHolder(@NonNull MovieViewHolder holder, final int position) {
             //mCursor.moveToPosition(position);
@@ -103,7 +111,7 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
 //I predict this code compiles to the following
                 Picasso.with(poster_iv.getContext())
                         .load(                                      //this should depend on calling activity, right?
-                                MoviesAPIClient.buildMoviePosterUrl(mContext.getResources().getString(R.string.size_poster_rv_default), currMovie.getPosterPath()).toString())
+                                MoviesAPIClient.buildMoviePosterUrl(title_tv.getContext().getResources().getString(R.string.size_poster_rv_default), currMovie.getPosterPath()).toString())
                         .fit().centerCrop()
                         .placeholder(R.drawable.ic_movie_poster_paceholder)
                         .error(R.drawable.ic_error_face)

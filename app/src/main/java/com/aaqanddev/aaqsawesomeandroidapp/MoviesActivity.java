@@ -47,7 +47,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //main_activity_movies = new ArrayList<>(20);
+        main_activity_movies = new ArrayList<>();
         setContentView(R.layout.activity_movies);
 
 
@@ -102,9 +102,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
                         System.out.println("json returned: " + jsonReturned.toString());
                         int pgs = response.body().getPage();
                         System.out.println("no. pgs: " + pgs );
-                        main_activity_movies = response.body().getMovies();
-
-                        mAdapter.notifyDataSetChanged();
+                        mAdapter.updateData(response.body().getMovies());
                     }
 
 

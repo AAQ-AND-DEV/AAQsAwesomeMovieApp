@@ -1,12 +1,15 @@
 package com.aaqanddev.aaqsawesomeandroidapp;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.PersistableBundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,12 +19,14 @@ import android.widget.Toast;
 
 import com.aaqanddev.aaqsawesomeandroidapp.Adapters.MovieRVAdapter;
 import com.aaqanddev.aaqsawesomeandroidapp.Interfaces.MovieApiInterface;
+import com.aaqanddev.aaqsawesomeandroidapp.Utilities.ConnectionCheckTask;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.MoviesAPIClient;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.SecretApiConstant;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieList;
 
 import java.lang.reflect.Array;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -136,17 +141,37 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
         moviesRv.setAdapter(mAdapter);
 
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")){
-            getData();
+            new ConnectionCheckTask(new ConnectionCheckTask.Consumer() {
+                @Override
+                public void accept(Boolean internet) throws ConnectException {
+                    if (internet){
+                        getData();
+                    }
+                    else {
+                        Toast.makeText(moviesRv.getContext(), "sorry, try again when you have internet",Toast.LENGTH_LONG);
+                        //TODO *u* upgrade to fragment that accesses Wifi setup?
+//                        Intent intent = new Intent(moviesRv.getContext(), Det)
+                        throw new ConnectException("unable to connect to Socket");
+                        //TODO <r> How do i handle this exception
+                        //do I return to the mainActivity?
+                        //return to the calling activity somehow?
+                    }
+
+                }
+            });
+
         } else {
             main_activity_movies = savedInstanceState.getParcelableArrayList("movies");
             mAdapter.notifyDataSetChanged();
         }
     }
     @Override
-    public void onClick(final int movieId) {
+    public void onItemClick(final View v, final int movieId) {
         //TODO(Q) do I want to do anything with this?
         //this is getting called by line 124 in MovieRVAdapter mOnItemClickListener.onClick();
         //Direct to Detail_Activity? Already doing that from onClick handle in ViewHolder
+        int itemPos = moviesRv.getChildLayoutPosition(v);
+        AaqMovie movie = main_activity_movies.get(itemPos);
 
         //could make an API call here
         //but I think i should be making a call to the RVadapter
@@ -154,13 +179,20 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
         //is there a special way to access cache from Retrofit,
         // or better way to store so it's filterable, other than as List<AaqMovie>?
         // do I need to do anything here at all, perhaps this is where I should launchActivity?
-        List<AaqMovie> res = main_activity_movies.stream()
-                .filter(movie -> movieId == movie.getId()).collect(Collectors.toList());
-        AaqMovie movie = res.get(0);
-        Toast.makeText(this, "i can click and get "+movie.getTitle()+" is surely great?", Toast.LENGTH_SHORT).show();
+        //Can prbly use this somewhere? contentProvider or Room, maybe?
+//        List<AaqMovie> res = main_activity_movies.stream()
+//                .filter(movie -> movieId == movie.getId()).collect(Collectors.toList());
+//        if (res!=null) {
+//            AaqMovie movie = res.get(0);
+//              ...}
+            Intent detailIntent = new Intent(this, MovieDetailActivity.class);
+            detailIntent.putExtra("myMovie", movie);
+            this.startActivity(detailIntent);
+            Toast.makeText(this, "i can click and get "+movie.getTitle()+" is surely great?", Toast.LENGTH_SHORT).show();
 
     }
 
+    //I think this was from SpinnerListener
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
        //TODO (must do something with this?...perhaps check cache? load if null)

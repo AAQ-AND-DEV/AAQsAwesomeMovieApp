@@ -3,12 +3,13 @@ package com.aaqanddev.aaqsawesomeandroidapp.Utilities;
 import android.os.AsyncTask;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class ConnectionCheckTask extends AsyncTask<Void, Void, Boolean> {
     public Consumer mConsumer;
-    public interface Consumer { void accept(Boolean internet);}
+    public interface Consumer { void accept(Boolean internet) throws ConnectException;}
 
     public ConnectionCheckTask(Consumer consumer) {mConsumer = consumer; execute(); }
 
@@ -24,6 +25,10 @@ public class ConnectionCheckTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean aBoolean) {
-        mConsumer.accept(aBoolean);
+        try {
+            mConsumer.accept(aBoolean);
+        } catch (ConnectException e) {
+            e.printStackTrace();
+        }
     }
 }

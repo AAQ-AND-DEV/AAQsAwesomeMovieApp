@@ -3,11 +3,22 @@
     <dimen name="activity_horizontal_padding">16dp</dimen>
     <dimen name="activity_vertical_padding">16dp</dimen>
 
+    <dimen name="activity_main_img_margin">8dp</dimen>
+
     <dimen name="indicator_box_size_length">42dp</dimen>
 
+    <dimen name="main_tv_padding">4dp</dimen>
+    <dimen name="main_tv_margin">8dp</dimen>
+
     <dimen name="small_text_size_details">12sp</dimen>
-    <dimen name="med_text_size_details">16sp</dimen>
-    <dimen name="large_text_size_details">24sp</dimen>
+    <dimen name="med_text_size_details">18sp</dimen>
+    <dimen name="large_text_size_details">32sp</dimen>
+    <dimen name="huge_text_size_details">48sp</dimen>
+
+    <dimen name="small_text_size_main_rv">18sp</dimen>
+    <dimen name="med_text_size_main_rv">24sp</dimen>
+    <dimen name="large_text_size_main_rv">48sp</dimen>
+    <dimen name="huge_text_size_main_rv">64sp</dimen>
 
     <dimen name="movie_poster_size">80dp</dimen>
 

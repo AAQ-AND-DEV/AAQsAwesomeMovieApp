@@ -2,26 +2,27 @@
 <FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:theme="@style/MovieViewTheme"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/item_movie_name"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@+id/item_iv_movie_poster"
-            tools:text="test text" />
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
         <ImageView
             android:id="@+id/item_iv_movie_poster"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:scaleType="center"
-            android:padding="@dimen/activity_horizontal_padding" />
-    </android.support.constraint.ConstraintLayout>
+            android:background="@drawable/border"
 
+            android:padding="@dimen/activity_horizontal_padding" />
+        <TextView
+            android:theme="@style/MovieTextViewTheme"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:lines="2"
+            android:shadowColor="@color/colorPrimary"
+            android:shadowDy="5.5"
+            android:shadowDx="1.8"
+            android:shadowRadius="1.5"
+            android:id="@+id/item_movie_name"
+            android:gravity="end|bottom"
+            android:layout_gravity="bottom"
+            tools:text="test text" />
 </FrameLayout>

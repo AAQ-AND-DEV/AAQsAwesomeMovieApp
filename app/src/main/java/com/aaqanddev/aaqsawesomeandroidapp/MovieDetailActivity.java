@@ -16,10 +16,9 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-        //setContentView(R.layout.activity_movie_detail);
-       ActivityMovieDetailBinding viewDataBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ActivityMovieDetailBinding viewDataBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail);
         AaqMovie thisMovie = getIntent().getParcelableExtra("myMovie");
         viewDataBinding.setMovie(thisMovie);
         viewDataBinding.movieDetailTitle.setContentDescription(getString(R.string.ally_movie_title));
@@ -27,10 +26,5 @@ public class MovieDetailActivity extends AppCompatActivity {
         viewDataBinding.movieDetailSummary.setContentDescription(getString(R.string.ally_movie_desc));
         viewDataBinding.movieDetailVoteAverage.setContentDescription(getString(R.string.ally_movie_vote_ave));
         viewDataBinding.movieDetailPosterIv.setContentDescription(getString(R.string.ally_movie_poster_image));
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 }

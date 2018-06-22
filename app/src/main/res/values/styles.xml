@@ -9,8 +9,15 @@
 
     </style>
 
-    <style name="MovieViewTheme" parent="Theme.AppCompat.Light">
-        <item name="android:textSize">@dimen/med_text_size_details</item>
+    <style name="MovieTextViewTheme" parent="Theme.AppCompat.Light">
+        <item name="android:textSize">@dimen/med_text_size_main_rv</item>
+        <item name="android:padding">@dimen/main_tv_padding</item>
+        <item name="android:layout_marginStart">@dimen/activity_main_img_margin</item>
+        <item name="android:layout_marginEnd">@dimen/activity_main_img_margin</item>
+
+        <item name="android:textColor">@color/colorPrimaryExtraDark</item>
+
+        <item name="android:background">@drawable/border_comp_rv_item</item>
 
     </style>
 

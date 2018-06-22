@@ -26,8 +26,8 @@ public class MoviesAPIClient {
     //http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
     public static final String base_Image_auth = "image.tmdb.org";
     //public static final Uri buildBasePosterUri = ;
-    public static final String sub_path_poster_1 = "t";
-    public static final String sub_path_poster_2 ="p";
+    public static final String sub_path_poster = "t/p";
+    //public static final String sub_path_poster_2 ="p";
 
 
 
@@ -56,8 +56,7 @@ public class MoviesAPIClient {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("https")
                 .authority(base_Image_auth)
-                .appendPath(sub_path_poster_1)
-                .appendPath(sub_path_poster_2)
+                .appendEncodedPath(sub_path_poster)
                 .appendPath(posterSize)
                 .appendEncodedPath(posterPath);
 

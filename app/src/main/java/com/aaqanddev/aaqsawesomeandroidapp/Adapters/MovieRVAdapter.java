@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,7 +113,8 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
                 Picasso.with(poster_iv.getContext())
                         .load(                                      //this should depend on calling activity, right?
                                 MoviesAPIClient.buildMoviePosterUrl(title_tv.getContext().getResources().getString(R.string.size_poster_rv_default), currMovie.getPosterPath()).toString())
-                        .fit().centerCrop()
+                        .fit()
+                        .centerInside()
                         .placeholder(R.drawable.ic_movie_poster_paceholder)
                         .error(R.drawable.ic_error_face)
                         .into(poster_iv);
@@ -131,16 +133,16 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
             }
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(),"this works!",Toast.LENGTH_SHORT);
+                Toast.makeText(v.getContext(),"what is this for anyway?!?entering mOnItemClickListener call",Toast.LENGTH_SHORT);
                 //TODO (I) direct to detailActivity
-                Intent detailIntent = new Intent(v.getContext(), MovieDetailActivity.class);
+                Log.d("hypoL entered first", "then sending view? with position to give MainActivity");
+//                //TODO not sure what this is for? --
+//                //relocating to onClick in MainActivity
 
-                //TODO not sure what this is for? --
-                //relocating to onClick in MainActivity
-                mOnItemClickListener.onClick(currMovie.getId());
-
-                detailIntent.putExtra("myMovie", currMovie);
-                v.getContext().startActivity(detailIntent);
+                  mOnItemClickListener.onItemClick(v, this.getLayoutPosition());
+//
+//                detailIntent.putExtra("myMovie", currMovie);
+//                v.getContext().startActivity(detailIntent);
 
             }
 
@@ -152,7 +154,7 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
 
         public interface MainRecyclerViewClickListener {
 
-            void onClick(int movieId);
+            void onItemClick(final View view, int movieId);
         }
     }
 

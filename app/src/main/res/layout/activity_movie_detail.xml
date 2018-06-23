@@ -8,10 +8,7 @@
             name="movie"
             type="com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie"/>
     </data>
-
-    <ScrollView android:layout_height="match_parent" android:layout_width="match_parent">
-
-        <android.support.constraint.ConstraintLayout
+    <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".DetailActivity"
@@ -43,6 +40,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/detail_release_date_label"
+                android:textColor="@color/colorPrimaryBlack"
                 android:gravity="top"
 
                 app:layout_constraintTop_toTopOf="@+id/movie_detail_release_date"
@@ -56,12 +54,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/movie_detail_vote_average"
                 app:layout_constraintTop_toBottomOf="@+id/movie_detail_title"
-                app:layout_constraintBottom_toTopOf="@+id/movie_detail_summary"/>
+                app:layout_constraintBottom_toTopOf="@+id/detail_overview_label"/>
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="top"
                 android:text="@string/detail_ave_vote_label"
+                android:textColor="@color/colorPrimaryBlack"
                 app:layout_constraintTop_toTopOf="@+id/movie_detail_vote_average"
                 app:layout_constraintStart_toStartOf="@+id/movie_detail_vote_average"
                 app:layout_constraintEnd_toEndOf="@+id/movie_detail_vote_average"
@@ -75,31 +74,46 @@
                 android:gravity="center_horizontal"
                 app:layout_constraintStart_toEndOf="@+id/movie_detail_title"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/movie_detail_title"
-                app:layout_constraintBottom_toTopOf="@+id/movie_detail_summary"/>
+                app:layout_constraintTop_toBottomOf="@id/movie_detail_poster_iv"
+                app:layout_constraintBottom_toTopOf="@+id/detail_overview_label"/>
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                style="@style/DetailTextViewTheme"
                 android:text="@string/detail_overview_label"
                 android:id="@+id/detail_overview_label"
-                android:gravity="top"
-                app:layout_constraintTop_toTopOf="@+id/movie_detail_summary"
-                app:layout_constraintBottom_toBottomOf="@+id/movie_detail_summary"
-                app:layout_constraintStart_toStartOf="@+id/movie_detail_summary"
-                app:layout_constraintEnd_toEndOf="@+id/movie_detail_summary"/>
-            <TextView
-                android:id="@+id/movie_detail_summary"
-                style="@style/DetailTextViewTheme"
-                android:text="@{movie.overview}"
-                android:gravity="top"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="@dimen/detail_tv_margin"
+                android:textColor="@color/colorPrimaryBlack"
+                app:layout_constraintTop_toBottomOf="@+id/movie_detail_release_date"
+                app:layout_constraintBottom_toTopOf="@+id/scroll_detail"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/movie_detail_release_date"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                />
 
+            <ScrollView android:layout_height="wrap_content" android:layout_width="match_parent"
+                android:id="@+id/scroll_detail"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detail_overview_label"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:padding="@dimen/detail_tv_padding"
+                android:background="@drawable/border_detail_movie"
+                android:layout_margin="@dimen/detail_tv_margin"
+                android:layout_marginTop="0dp"
+                >
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/movie_detail_summary"
+                    style="@style/DetailTextViewTheme"
+                    android:textSize="@dimen/large_text_size_details"
+                    android:text="@{movie.overview}"
+                    android:gravity="center"
+
+                    />
+            </ScrollView>
             <!--could i develop to either provide this IV from cache
                 or run the Picasso code here?-->
 
         </android.support.constraint.ConstraintLayout>
-    </ScrollView>
+
 </layout>

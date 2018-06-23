@@ -10,6 +10,11 @@
     <dimen name="main_tv_padding">4dp</dimen>
     <dimen name="main_tv_margin">8dp</dimen>
 
+    <dimen name="detail_tv_padding">12dp</dimen>
+    <dimen name="detail_tv_margin">8dp</dimen>
+
+    <dimen name="rv_tv_size">64dp</dimen>
+
     <dimen name="small_text_size_details">12sp</dimen>
     <dimen name="med_text_size_details">18sp</dimen>
     <dimen name="large_text_size_details">32sp</dimen>

@@ -9,16 +9,27 @@
 
     </style>
 
-    <style name="MovieTextViewTheme" parent="Theme.AppCompat.Light">
+    <style name="BaseTextViewTheme" parent="Theme.AppCompat.Light">
+        <item name="android:textColor">@color/colorPrimaryExtraDark</item>
+    </style>
+
+    <style name="MovieTextViewTheme" parent="BaseTextViewTheme">
         <item name="android:textSize">@dimen/med_text_size_main_rv</item>
         <item name="android:padding">@dimen/main_tv_padding</item>
         <item name="android:layout_marginStart">@dimen/activity_main_img_margin</item>
         <item name="android:layout_marginEnd">@dimen/activity_main_img_margin</item>
-
-        <item name="android:textColor">@color/colorPrimaryExtraDark</item>
-
         <item name="android:background">@drawable/border_comp_rv_item</item>
-
+    </style>
+    <style name="DetailTextViewTheme" parent="BaseTextViewTheme">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">end</item>
+        <item name="android:textColor">@color/colorPrimaryExtraDark</item>
+        <item name="android:textSize">@dimen/med_text_size_details</item>
+        <item name="android:padding">@dimen/detail_tv_padding</item>
+        <item name="android:layout_marginStart">@dimen/detail_tv_margin</item>
+        <item name="android:layout_marginEnd">@dimen/detail_tv_margin</item>
+        <item name="android:background">@drawable/border_detail_movie</item>
     </style>
 
     <style name="ErrorTheme" parent="TextAppearance.AppCompat">

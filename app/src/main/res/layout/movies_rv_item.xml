@@ -10,12 +10,11 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@drawable/border"
-
             android:padding="@dimen/activity_horizontal_padding" />
         <TextView
             android:theme="@style/MovieTextViewTheme"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="@dimen/rv_tv_size"
             android:lines="2"
             android:shadowColor="@color/colorPrimary"
             android:shadowDy="5.5"

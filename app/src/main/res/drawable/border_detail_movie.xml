@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <stroke android:color="@color/colorCompDark" android:width="0dp"/>
+    <solid android:color="@color/colorPrimaryTransparent"/>
+    <corners android:radius="12dp"/>
+
+    <padding
+        android:top="@dimen/detail_tv_padding" android:bottom="@dimen/detail_tv_padding" android:left="@dimen/detail_tv_padding" android:right="@dimen/detail_tv_padding"/>
+</shape>

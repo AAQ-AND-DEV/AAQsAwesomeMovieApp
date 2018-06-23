@@ -8,71 +8,98 @@
             name="movie"
             type="com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie"/>
     </data>
-    <FrameLayout
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
 
-        <ScrollView android:layout_height="match_parent" android:layout_width="match_parent"
-            xmlns:android="http://schemas.android.com/apk/res/android">
+    <ScrollView android:layout_height="match_parent" android:layout_width="match_parent">
 
-            <android.support.constraint.ConstraintLayout
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".DetailActivity">
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".DetailActivity"
+            android:background="@drawable/border">
+            <ImageView
+                android:id="@+id/movie_detail_poster_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_marginTop="@dimen/detail_tv_margin"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/movie_detail_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+            <TextView
+                style="@style/MovieTextViewTheme"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/movie_detail_title"
+                android:text="@{movie.title}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/movie_detail_vote_average"
+                app:layout_constraintTop_toBottomOf="@+id/movie_detail_poster_iv"
+                app:layout_constraintBottom_toTopOf="@+id/movie_detail_release_date"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_release_date_label"
+                android:gravity="top"
 
-                <TextView
-                    android:id="@+id/movie_detail_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@{movie.title}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/movie_detail_summary"
-                    />
-                <TextView
-                    android:id="@+id/movie_detail_release_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@{movie.releaseDate}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/movie_detail_vote_average"
-                    app:layout_constraintTop_toBottomOf="@+id/movie_detail_title"
-                    app:layout_constraintBottom_toTopOf="@+id/movie_detail_summary"/>
-                <TextView
-                    android:id="@+id/movie_detail_vote_average"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(safeUnbox(movie.voteAverage))}"
-                    app:layout_constraintStart_toEndOf="@+id/movie_detail_release_date"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/movie_detail_title"
-                    app:layout_constraintBottom_toTopOf="@+id/movie_detail_summary"/>
-                <TextView
-                    android:id="@+id/movie_detail_summary"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@{movie.overview}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/movie_detail_vote_average"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toTopOf="@+id/movie_detail_release_date"
+                app:layout_constraintBottom_toBottomOf="@+id/movie_detail_release_date"
+                app:layout_constraintStart_toStartOf="@+id/movie_detail_release_date"
+                app:layout_constraintEnd_toEndOf="@+id/movie_detail_release_date"/>
+            <TextView
+                style="@style/DetailTextViewTheme"
+                android:id="@+id/movie_detail_release_date"
+                android:text="@{movie.releaseDate}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/movie_detail_vote_average"
+                app:layout_constraintTop_toBottomOf="@+id/movie_detail_title"
+                app:layout_constraintBottom_toTopOf="@+id/movie_detail_summary"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:text="@string/detail_ave_vote_label"
+                app:layout_constraintTop_toTopOf="@+id/movie_detail_vote_average"
+                app:layout_constraintStart_toStartOf="@+id/movie_detail_vote_average"
+                app:layout_constraintEnd_toEndOf="@+id/movie_detail_vote_average"
+                app:layout_constraintBottom_toBottomOf="@+id/movie_detail_vote_average"
+                />
 
-                <!--could i develop to either provide this IV from cache
-                    or run the Picasso code here?-->
-                <ImageView
-                    android:id="@+id/movie_detail_poster_iv"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitCenter"
+            <TextView
+                style="@style/DetailTextViewTheme"
+                android:id="@+id/movie_detail_vote_average"
+                android:text="@{String.valueOf(safeUnbox(movie.voteAverage))}"
+                android:gravity="center_horizontal"
+                app:layout_constraintStart_toEndOf="@+id/movie_detail_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/movie_detail_title"
+                app:layout_constraintBottom_toTopOf="@+id/movie_detail_summary"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_overview_label"
+                android:id="@+id/detail_overview_label"
+                android:gravity="top"
+                app:layout_constraintTop_toTopOf="@+id/movie_detail_summary"
+                app:layout_constraintBottom_toBottomOf="@+id/movie_detail_summary"
+                app:layout_constraintStart_toStartOf="@+id/movie_detail_summary"
+                app:layout_constraintEnd_toEndOf="@+id/movie_detail_summary"/>
+            <TextView
+                android:id="@+id/movie_detail_summary"
+                style="@style/DetailTextViewTheme"
+                android:text="@{movie.overview}"
+                android:gravity="top"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/movie_detail_release_date"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/movie_detail_title"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </android.support.constraint.ConstraintLayout>
-        </ScrollView>
-    </FrameLayout>
+            <!--could i develop to either provide this IV from cache
+                or run the Picasso code here?-->
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 </layout>

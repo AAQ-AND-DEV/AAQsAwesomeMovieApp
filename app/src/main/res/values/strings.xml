@@ -3,10 +3,10 @@
     <string name="movie_API_citation">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
     <string name="detail_error_message">Oops, couldn\'t get that movie.</string>
 
-    <string name="detail_name_label">Movie: </string>
-    <string name="detail_overview_label">Overview: </string>
-    <string name="detail_rating_label">Rating: </string>
-    <string name="detail_release_date">Released: </string>
+    <string name="detail_name_label">Movie:</string>
+    <string name="detail_overview_label">Overview:</string>
+    <string name="detail_ave_vote_label">Ave. Vote:</string>
+    <string name="detail_release_date_label">Released:</string>
 
     <string name="poster_image_content_desc">Movie Poster Image</string>
 
@@ -40,7 +40,8 @@
     <string name="fetch_by_pop_JSON_key">popular</string>
     <string name="sort_param_default">@string/fetch_by_rating</string>
     <string name="size_poster_small">w185</string>
-    <string name="large">w780</string>
+    <string name="size_poster_large">w780</string>
     <string name="poster_fetch_sub_path">t/p/</string>
     <string name="size_poster_rv_default">@string/size_poster_small</string>
+
 </resources>

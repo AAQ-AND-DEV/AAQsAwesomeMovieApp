@@ -34,19 +34,35 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
 
     RecyclerView moviesRv;
     private MovieRVAdapter mAdapter;
+    GridLayoutManager mGridLayoutManager;
     MovieApiInterface movieApiInterface;
-    MovieRVAdapter.MainRecyclerViewClickListener mMainRVlistener;
     //TODO move spinner to AppBar(is that what topBar is called?
     Spinner sortSpinner;
     AdapterView.OnItemSelectedListener onSortSelectedChangeListener;
     String mSortChoice;
+    Parcelable mListState;
     List<AaqMovie> main_activity_movies;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*
+        if (savedInstanceState != null){
+            main_activity_movies = savedInstanceState.getParcelableArrayList(getString(R.string.bundle_movies_key));
+            mAdapter.updateData(main_activity_movies);
+            mGridLayoutManager.onRestoreInstanceState(mListState);
+        } else {
+            main_activity_movies = new ArrayList<>();
+        }
+        */
+        //TODO must comment out this new ArrayList (going to be in restoreInstanceState null check l8r
         main_activity_movies = new ArrayList<>();
+
         setContentView(R.layout.activity_movies);
+
+        //TODO connect to Db (also  add memberVars applicable)
+
         sortSpinner = (Spinner) findViewById(R.id.sort_pref_spinner);
         ArrayAdapter<CharSequence> sortSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.pref_fetch_by_labels, android.R.layout.simple_spinner_item);
         sortSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -64,6 +80,9 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
         outState.putParcelableArrayList("movies", new ArrayList<AaqMovie>(mAdapter.getMovies()));
+        //TODO () pass in the Adapter -- to  maintain adapterPosition
+        mListState = mGridLayoutManager.onSaveInstanceState();
+        outState.putParcelable(getString(R.string.bundle_layout_manager_key), mListState);
     }
 
 
@@ -74,6 +93,8 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
             getData();
         } else {
             main_activity_movies = savedInstanceState.getParcelableArrayList("movies");
+            mListState = savedInstanceState.getParcelable(getString(R.string.bundle_layout_manager_key));
+
         }
     }
 
@@ -113,7 +134,8 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
 
     private void initViews( Bundle savedInstanceState){
         moviesRv = (RecyclerView) findViewById(R.id.recyclerview_main_movies);
-        moviesRv.setLayoutManager(new GridLayoutManager(this, 2));
+        mGridLayoutManager  = new GridLayoutManager(this, 2);
+        moviesRv.setLayoutManager(mGridLayoutManager);
         moviesRv.setHasFixedSize(true);
         moviesRv.setItemAnimator(new DefaultItemAnimator());
         mAdapter = new MovieRVAdapter(main_activity_movies, this);

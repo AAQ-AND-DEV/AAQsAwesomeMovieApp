@@ -16,14 +16,16 @@
     <string name="ally_movie_poster_image">movie poster</string>
     <string name="ally_movie_date">movie release date</string>
     <string name="ally_movie_vote_ave">movie vote average</string>
+    <string name="ally_fave_button">button for add or subtract favorite</string>
 
     <!--Preferences -->
     <string name="my_prefs_label">MyPrefs</string>
     <string name="search_param_spinner_label">Sort By:</string>
 
-    <!--Bundle Key -->
+    <!--Bundle Keys -->
     <string name="bundle_movies_key">movies_key</string>
     <string name="bundle_movie_detail_key">movie_passed_key</string>
+    <string name="bundle_layout_manager_key">adapterBundleKey</string>
 
     <!-- strings for the spinner adapter arrays should this
     just be top_rated or popular (making it easier?)-->
@@ -43,5 +45,6 @@
     <string name="size_poster_large">w780</string>
     <string name="poster_fetch_sub_path">t/p/</string>
     <string name="size_poster_rv_default">@string/size_poster_small</string>
+
 
 </resources>

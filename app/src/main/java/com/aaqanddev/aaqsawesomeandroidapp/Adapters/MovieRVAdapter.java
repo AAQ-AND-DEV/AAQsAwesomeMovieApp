@@ -3,17 +3,17 @@ package com.aaqanddev.aaqsawesomeandroidapp.Adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import com.aaqanddev.aaqsawesomeandroidapp.R;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.MoviesAPIClient;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adapter<MovieRVAdapter.MovieViewHolder>{
@@ -24,6 +24,11 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
         //private Cursor mCursor;
         private Context mContext;
         private int mId;
+        private int mAdapterPos;
+    //TODO()need to change this to be set where called
+
+
+
 
     public MovieRVAdapter( List<AaqMovie> movies, MainRecyclerViewClickListener onItemClickListener){
 
@@ -90,6 +95,7 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
             }
 
             public void bind( int pos) {
+
                 currMovie = mMovies.get(pos);
                 title_tv.setText(currMovie.getTitle());
                 title_tv.setContentDescription(itemView.getResources().getString(R.string.ally_movie_title));
@@ -103,14 +109,7 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
                         .error(R.drawable.ic_error_face)
                         .into(poster_iv);
                 poster_iv.setContentDescription(itemView.getResources().getString(R.string.ally_movie_poster_image));
-  /*
-                Picasso.Builder builder = new Picasso.Builder(mContext);
-                builder.downloader(new OkHttpDownloader(mContext));
-                builder.build().load(mMovie.getPosterPath())
-                        .placeholder(R.drawable.ic_movie_poster_paceholder)
-                        .error(R.drawable.ic_error_face)
-                        .into(poster_iv);
-    */
+
                 itemView.setOnClickListener(this);
 
 

@@ -24,6 +24,8 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
         //private Cursor mCursor;
         private Context mContext;
         private int mId;
+        private int mAdapterPos;
+        //TODO()need to change this to be set where called
 
     public MovieRVAdapter( List<AaqMovie> movies, MainRecyclerViewClickListener onItemClickListener){
 
@@ -90,10 +92,10 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
             }
 
             public void bind( int pos) {
+
                 currMovie = mMovies.get(pos);
                 title_tv.setText(currMovie.getTitle());
                 title_tv.setContentDescription(itemView.getResources().getString(R.string.ally_movie_title));
-                //I predict this code compiles to the one following -- want to check that out
                 Picasso.with(poster_iv.getContext())
                         .load(                                      //this should depend on calling activity, right?
                                 MoviesAPIClient.buildMoviePosterUrl(title_tv.getContext().getResources().getString(R.string.size_poster_rv_default), currMovie.getPosterPath()).toString())
@@ -103,21 +105,13 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
                         .error(R.drawable.ic_error_face)
                         .into(poster_iv);
                 poster_iv.setContentDescription(itemView.getResources().getString(R.string.ally_movie_poster_image));
-  /*
-                Picasso.Builder builder = new Picasso.Builder(mContext);
-                builder.downloader(new OkHttpDownloader(mContext));
-                builder.build().load(mMovie.getPosterPath())
-                        .placeholder(R.drawable.ic_movie_poster_paceholder)
-                        .error(R.drawable.ic_error_face)
-                        .into(poster_iv);
-    */
+
                 itemView.setOnClickListener(this);
 
 
             }
             @Override
             public void onClick(View v) {
-
                 //Toast.makeText(v.getContext(),"what is this for anyway?!?entering mOnItemClickListener call",Toast.LENGTH_SHORT);
                 mOnItemClickListener.onItemClick(v, this.getLayoutPosition());
             }

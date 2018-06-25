@@ -1,30 +1,39 @@
 
 package com.aaqanddev.aaqsawesomeandroidapp.pojo;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+import android.content.pm.FeatureGroupInfo;
+import android.graphics.Region;
 import android.os.Parcel;
 import android.os.Parcelable;
-
+import java.util.AbstractQueue;
+import java.util.ArrayList;
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@Entity
 public class AaqMovie implements Parcelable {
     /*
+
+*/
+    public AaqMovie(){}
+
+    @Ignore
+    public  AaqMovie(String title){
+        this.title = title;
+    }
+
+    @Ignore
     public AaqMovie(Integer id, String overview, String posterPath, String title, Double voteAverage) {
         this.id = id;
         this.overview = overview;
         this.posterPath = posterPath;
         this.title = title;
         this.voteAverage = voteAverage;
-    }
-*/
-    public AaqMovie(){
-
-    }
-    public  AaqMovie(String title){
-        this.title = title;
     }
 
     private Boolean isFavorite;
@@ -55,6 +64,7 @@ public class AaqMovie implements Parcelable {
     */
     @SerializedName("id")
     @Expose
+    @PrimaryKey()
     private Integer id;
     @SerializedName("imdb_id")
     @Expose
@@ -84,6 +94,8 @@ public class AaqMovie implements Parcelable {
     */
     @SerializedName("release_date")
     @Expose
+    //TODO (should I set releaseDate to be a Date and create the DateConverter?)
+    //@TypeConverters(DateConverter.class)
     private String releaseDate;
     @SerializedName("revenue")
     @Expose
@@ -91,8 +103,10 @@ public class AaqMovie implements Parcelable {
     @SerializedName("runtime")
     @Expose
     private Integer runtime;
+    //TODO create a converter for this (and others), i'm guessing that would consist of converting this list to a string
     @SerializedName("spoken_languages")
     @Expose
+    @Ignore
     private List<SpokenLanguage> spokenLanguages = null;
     @SerializedName("status")
     @Expose
@@ -315,11 +329,11 @@ public class AaqMovie implements Parcelable {
         this.voteCount = voteCount;
     }
 
-    public Boolean getFavorite() {
+    public Boolean getIsFavorite() {
         return isFavorite;
     }
 
-    public void setFavorite(Boolean favorite) {
+    public void setIsFavorite(Boolean favorite) {
         isFavorite = favorite;
     }
 //endregion

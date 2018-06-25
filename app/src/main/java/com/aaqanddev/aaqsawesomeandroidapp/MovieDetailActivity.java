@@ -23,6 +23,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivityMovieDetailBinding viewDataBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail);
         AaqMovie thisMovie = getIntent().getParcelableExtra("myMovie");
+        //TODO debug -- seems like perhaps adding the ImageButton without doing a databinding call is causing a problem in setMovie?
         viewDataBinding.setMovie(thisMovie);
         //int movieId = thisMovie.getId();
         Picasso.with(this)
@@ -33,6 +34,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .error(R.drawable.ic_error_face)
                 .into(viewDataBinding.movieDetailPosterIv);
         viewDataBinding.movieDetailTitle.setContentDescription(getString(R.string.ally_movie_title));
+        viewDataBinding.faveImgButton.setContentDescription(getString(R.string.ally_fave_button));
         viewDataBinding.movieDetailReleaseDate.setContentDescription(getString(R.string.ally_movie_date));
         viewDataBinding.movieDetailSummary.setContentDescription(getString(R.string.ally_movie_desc));
         viewDataBinding.movieDetailVoteAverage.setContentDescription(getString(R.string.ally_movie_vote_ave));

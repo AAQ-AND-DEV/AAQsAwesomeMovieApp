@@ -60,9 +60,11 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
         */
         //TODO must comment out this new ArrayList (going to be in restoreInstanceState null check l8r
         main_activity_movies = new ArrayList<>();
+
         setContentView(R.layout.activity_movies);
 
         //TODO connect to Db (also  add memberVars applicable)
+
         sortSpinner = (Spinner) findViewById(R.id.sort_pref_spinner);
         ArrayAdapter<CharSequence> sortSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.pref_fetch_by_labels, android.R.layout.simple_spinner_item);
         sortSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -93,7 +95,6 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
             getData();
         } else {
             main_activity_movies = savedInstanceState.getParcelableArrayList("movies");
-
             mListState = savedInstanceState.getParcelable(getString(R.string.bundle_layout_manager_key));
 
         }

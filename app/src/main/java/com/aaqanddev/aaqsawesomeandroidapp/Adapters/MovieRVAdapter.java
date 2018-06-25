@@ -3,17 +3,17 @@ package com.aaqanddev.aaqsawesomeandroidapp.Adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import com.aaqanddev.aaqsawesomeandroidapp.R;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.MoviesAPIClient;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adapter<MovieRVAdapter.MovieViewHolder>{

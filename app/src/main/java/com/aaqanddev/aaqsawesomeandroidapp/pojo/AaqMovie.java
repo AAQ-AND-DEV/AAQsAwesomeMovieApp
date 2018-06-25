@@ -11,7 +11,6 @@ import android.databinding.ObservableBoolean;
 import android.graphics.Region;
 import android.os.Parcel;
 import android.os.Parcelable;
-import java.util.AbstractQueue;
 import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
@@ -37,8 +36,9 @@ public class AaqMovie implements Parcelable {
         this.title = title;
         this.voteAverage = voteAverage;
     }
-
+    
     private ObservableBoolean isFavorite;
+
 
     //TODO (finish sample code for java version of https://android.jlelse.eu/android-architecture-components-livedata-with-data-binding-7bf85871bbd8
     //MutableLiveData<String> kittyName = new MutableLiveData<String>();

@@ -1,6 +1,12 @@
 
 package com.aaqanddev.aaqsawesomeandroidapp.pojo;
 
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+import android.databinding.ObservableBoolean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -30,7 +36,10 @@ public class AaqMovie implements Parcelable {
         this.voteAverage = voteAverage;
     }
 
-    private Boolean isFavorite;
+    private ObservableBoolean isFavorite;
+
+    //TODO (finish sample code for java version of https://android.jlelse.eu/android-architecture-components-livedata-with-data-binding-7bf85871bbd8
+    //MutableLiveData<String> kittyName = new MutableLiveData<String>();
 
 
 
@@ -323,11 +332,11 @@ public class AaqMovie implements Parcelable {
         this.voteCount = voteCount;
     }
 
-    public Boolean getIsFavorite() {
+    public ObservableBoolean getIsFavorite() {
         return isFavorite;
     }
 
-    public void setIsFavorite(Boolean favorite) {
+    public void setIsFavorite(ObservableBoolean favorite) {
         isFavorite = favorite;
     }
 //endregion
@@ -368,7 +377,7 @@ public class AaqMovie implements Parcelable {
     }
 
     protected AaqMovie(Parcel in) {
-        this.isFavorite = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.isFavorite = (ObservableBoolean) in.readValue(Boolean.class.getClassLoader());
         this.adult = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.backdropPath = in.readString();
         //this.belongsToCollection = in.readParcelable(Object.class.getClassLoader());

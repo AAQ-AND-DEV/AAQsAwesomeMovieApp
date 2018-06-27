@@ -50,4 +50,14 @@ captures/
 google-services.json
 
 #api key
+*.iml
+.gradle
+/local.properties
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
 com.aaqanddev.aaqsawesomeandroidapp.Utilities.SecretApiConstant

@@ -3,6 +3,7 @@ package com.aaqanddev.aaqsawesomeandroidapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.content.res.Resources;
+
 import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;

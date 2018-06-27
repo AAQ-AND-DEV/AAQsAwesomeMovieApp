@@ -15,7 +15,11 @@ import java.util.GregorianCalendar;
 public class MovieDetailActivity extends AppCompatActivity {
 
 
+
+    //need to hook up data binding -- this would be too tedious
+
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityMovieDetailBinding viewDataBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail);

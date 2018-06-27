@@ -111,9 +111,5 @@
 
                     />
             </ScrollView>
-            <!--could i develop to either provide this IV from cache
-                or run the Picasso code here?-->
-
-        </android.support.constraint.ConstraintLayout>
-
+       </android.support.constraint.ConstraintLayout>
 </layout>

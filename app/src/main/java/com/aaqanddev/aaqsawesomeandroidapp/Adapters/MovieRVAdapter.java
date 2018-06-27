@@ -1,28 +1,19 @@
 package com.aaqanddev.aaqsawesomeandroidapp.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.aaqanddev.aaqsawesomeandroidapp.MovieDetailActivity;
 import com.aaqanddev.aaqsawesomeandroidapp.R;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.MoviesAPIClient;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
-import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adapter<MovieRVAdapter.MovieViewHolder>{
@@ -33,19 +24,12 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
         //private Cursor mCursor;
         private Context mContext;
         private int mId;
-    //TODO()need to change this to be set where called
-
-
-
 
     public MovieRVAdapter( List<AaqMovie> movies, MainRecyclerViewClickListener onItemClickListener){
-
-           // mContext = context;
 
             mOnItemClickListener = onItemClickListener;
 
             mMovies = movies;
-
         }
 
 
@@ -62,7 +46,7 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
             return movieViewHolder;
         }
 
-        public  void  updateData(List<AaqMovie> newData){
+        public  void  updateData(@NonNull List<AaqMovie> newData){
             if (mMovies!= null){
                 mMovies.clear();
 
@@ -109,7 +93,7 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
                 currMovie = mMovies.get(pos);
                 title_tv.setText(currMovie.getTitle());
                 title_tv.setContentDescription(itemView.getResources().getString(R.string.ally_movie_title));
-//I predict this code compiles to the following
+                //I predict this code compiles to the one following -- want to check that out
                 Picasso.with(poster_iv.getContext())
                         .load(                                      //this should depend on calling activity, right?
                                 MoviesAPIClient.buildMoviePosterUrl(title_tv.getContext().getResources().getString(R.string.size_poster_rv_default), currMovie.getPosterPath()).toString())
@@ -133,17 +117,9 @@ public class MovieRVAdapter extends  android.support.v7.widget.RecyclerView.Adap
             }
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(),"what is this for anyway?!?entering mOnItemClickListener call",Toast.LENGTH_SHORT);
-                //TODO (I) direct to detailActivity
-                Log.d("hypoL entered first", "then sending view? with position to give MainActivity");
-//                //TODO not sure what this is for? --
-//                //relocating to onClick in MainActivity
 
-                  mOnItemClickListener.onItemClick(v, this.getLayoutPosition());
-//
-//                detailIntent.putExtra("myMovie", currMovie);
-//                v.getContext().startActivity(detailIntent);
-
+                //Toast.makeText(v.getContext(),"what is this for anyway?!?entering mOnItemClickListener call",Toast.LENGTH_SHORT);
+                mOnItemClickListener.onItemClick(v, this.getLayoutPosition());
             }
 
         }

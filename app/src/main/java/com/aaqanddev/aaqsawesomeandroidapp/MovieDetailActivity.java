@@ -1,11 +1,8 @@
 package com.aaqanddev.aaqsawesomeandroidapp;
 
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.MoviesAPIClient;
 import com.aaqanddev.aaqsawesomeandroidapp.databinding.ActivityMovieDetailBinding;
@@ -13,10 +10,6 @@ import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 import com.squareup.picasso.Picasso;
 
 public class MovieDetailActivity extends AppCompatActivity {
-
-    //need to hook up data binding -- this would be too tedious
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

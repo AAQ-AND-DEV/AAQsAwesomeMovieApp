@@ -1,11 +1,9 @@
 package com.aaqanddev.aaqsawesomeandroidapp.Utilities;
 
-import android.content.res.Resources;
 import android.net.Uri;
 import android.util.Log;
 
 import com.aaqanddev.aaqsawesomeandroidapp.BuildConfig;
-import com.aaqanddev.aaqsawesomeandroidapp.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -16,7 +14,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Url;
 
 public class MoviesAPIClient {
     private static Retrofit retro = null;

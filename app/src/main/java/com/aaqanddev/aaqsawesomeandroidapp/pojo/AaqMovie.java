@@ -1,15 +1,14 @@
 
 package com.aaqanddev.aaqsawesomeandroidapp.pojo;
 
-import android.content.pm.FeatureGroupInfo;
-import android.graphics.Region;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AaqMovie implements Parcelable {
     /*

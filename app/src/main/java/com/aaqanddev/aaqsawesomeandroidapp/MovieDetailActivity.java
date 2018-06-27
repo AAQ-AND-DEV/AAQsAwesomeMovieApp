@@ -7,9 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.MoviesAPIClient;
 import com.aaqanddev.aaqsawesomeandroidapp.databinding.ActivityMovieDetailBinding;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
+import com.aaqanddev.aaqsawesomeandroidapp.pojo.Genre;
 import com.squareup.picasso.Picasso;
 
+import java.util.GregorianCalendar;
+
 public class MovieDetailActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

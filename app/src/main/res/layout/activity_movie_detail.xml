@@ -4,6 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
+        <import type="android.view.View"/>
+        <import  type="android.R"/>
         <variable
             name="movie"
             type="com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie"/>
@@ -45,7 +47,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/movie_detail_poster_iv"
                 app:layout_constraintBottom_toTopOf="@id/movie_detail_vote_average"
-                android:src="@{safeUnbox(movie.isFavorite) ? @drawable/rem_fave_button_img :@drawable/add_fave_button_image}"/>
+                app:imageResource="@{safeUnbox(movie.isFavorite) ? @drawable/rem_fave_button_img :@drawable/add_fave_button_image}}"/>
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

@@ -49,4 +49,5 @@ captures/
 # Google Services (e.g. APIs or Firebase)
 google-services.json
 
-Z:\aaron\AndroidStudioProjects\AAQsAwesomeAndroidApp\app\src\main\java\com\aaqanddev\aaqsawesomeandroidapp\Utilities\SecretApiConstant.java
+#api key
+com.aaqanddev.aaqsawesomeandroidapp.Utilities.SecretApiConstants

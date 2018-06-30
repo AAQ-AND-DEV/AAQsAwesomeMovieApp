@@ -50,4 +50,4 @@ captures/
 google-services.json
 
 #api key
-com.aaqanddev.aaqsawesomeandroidapp.Utilities.SecretApiConstants
+com.aaqanddev.aaqsawesomeandroidapp.Utilities.SecretApiConstant

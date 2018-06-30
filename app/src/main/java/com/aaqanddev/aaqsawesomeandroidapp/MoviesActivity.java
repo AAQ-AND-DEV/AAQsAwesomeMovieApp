@@ -17,7 +17,7 @@ import com.aaqanddev.aaqsawesomeandroidapp.Adapters.MovieRVAdapter;
 import com.aaqanddev.aaqsawesomeandroidapp.Interfaces.MovieApiInterface;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.ConnectionCheckTask;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.MoviesAPIClient;
-import com.aaqanddev.aaqsawesomeandroidapp.Utilities.SecretApiConstants;
+import com.aaqanddev.aaqsawesomeandroidapp.Utilities.SecretApiConstant;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieList;
 
@@ -83,7 +83,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
             movieApiInterface = movieRetro.create(MovieApiInterface.class);
             Call<AaqMovieList> movieListCall = movieApiInterface
                     .doGetMovieList(getResources().getStringArray(R.array.pref_fetch_by_vals)[sortSpinner.getSelectedItemPosition()]
-                            , SecretApiConstants.movieApiConstant,
+                            , SecretApiConstant.movieApiConstant,
                             getResources().getString(R.string.lang_default), getResources().getString(R.string.page_default));
             movieListCall.enqueue(new Callback<AaqMovieList>(){
 

@@ -1,7 +1,9 @@
 
 package com.aaqanddev.aaqsawesomeandroidapp.pojo;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
@@ -17,9 +19,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Entity
-public class AaqMovie implements Parcelable {
+public class AaqMovie extends ViewModel implements Parcelable  {
     /*
-
+        TODO(Q) extending ViewModel to expose state of isFavorite
+        does that make sense?
 */
     public AaqMovie(){}
 
@@ -37,16 +40,12 @@ public class AaqMovie implements Parcelable {
         this.voteAverage = voteAverage;
     }
     
-    private ObservableBoolean isFavorite;
-
-
-
-    private ObservableBoolean isFavorite;
+    private MutableLiveData<Boolean> isFavorite;
 
     //TODO (finish sample code for java version of https://android.jlelse.eu/android-architecture-components-livedata-with-data-binding-7bf85871bbd8
     //MutableLiveData<String> kittyName = new MutableLiveData<String>();
 
-
+//region non-fave attributes
 
     @SerializedName("adult")
     @Expose
@@ -134,8 +133,9 @@ public class AaqMovie implements Parcelable {
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;
+//endregion
 
-//region getters and setters
+//region non-fave getters and setters
     public Boolean getAdult() {
         return adult;
     }
@@ -336,16 +336,19 @@ public class AaqMovie implements Parcelable {
     public void setVoteCount(Integer voteCount) {
         this.voteCount = voteCount;
     }
-
-    public ObservableBoolean getIsFavorite() {
+    //endregion
+    //TODO <Q> this correct? not mutable, since in model
+    public MutableLiveData<Boolean> getIsFavorite() {
+       //idk do i have to catch null here?
+        // I don't think bool can be null
         return isFavorite;
     }
 
-    public void setIsFavorite(ObservableBoolean favorite) {
+    public void setIsFavorite(MutableLiveData<Boolean> favorite) {
         isFavorite = favorite;
     }
-//endregion
 
+//region parceling
     @Override
     public int describeContents() {
         return 0;
@@ -382,7 +385,7 @@ public class AaqMovie implements Parcelable {
     }
 
     protected AaqMovie(Parcel in) {
-        this.isFavorite = (ObservableBoolean) in.readValue(Boolean.class.getClassLoader());
+        this.isFavorite = (MutableLiveData<Boolean>) in.readValue(Boolean.class.getClassLoader());
         this.adult = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.backdropPath = in.readString();
         //this.belongsToCollection = in.readParcelable(Object.class.getClassLoader());
@@ -421,4 +424,5 @@ public class AaqMovie implements Parcelable {
             return new AaqMovie[size];
         }
     };
+    //endregion
 }

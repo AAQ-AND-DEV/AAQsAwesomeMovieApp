@@ -39,7 +39,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/movie_detail_release_date"
                 />
         <!-- TODO could set up a function call here to inform the src  based on isFave-->
-            <ImageButton
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/fave_img_button"
@@ -47,7 +47,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/movie_detail_poster_iv"
                 app:layout_constraintBottom_toTopOf="@id/movie_detail_vote_average"
-                app:imageResource="@{safeUnbox(movie.isFavorite) ? @drawable/rem_fave_button_img :@drawable/add_fave_button_image}}"/>
+                android:background="@drawable/fave_button_selector"/>
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -101,12 +101,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 />
 
-            <ScrollView android:layout_height="wrap_content" android:layout_width="match_parent"
+            <ScrollView
+                android:layout_height="wrap_content" android:layout_width="match_parent"
                 android:id="@+id/scroll_detail"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detail_overview_label"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/trailersLinLayout"
                 android:padding="@dimen/detail_tv_padding"
                 android:background="@drawable/border_detail_movie"
                 android:layout_margin="@dimen/detail_tv_margin"
@@ -122,6 +123,24 @@
                     android:gravity="center"
 
                     />
-            </ScrollView>
+
+                </ScrollView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/trailersLinLayout">
+        </LinearLayout>
+        <ScrollView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detail_overview_label"
+            app:layout_constraintBottom_toTopOf="@+id/trailersLinLayout"
+            >
+
+        </ScrollView>
        </android.support.constraint.ConstraintLayout>
 </layout>

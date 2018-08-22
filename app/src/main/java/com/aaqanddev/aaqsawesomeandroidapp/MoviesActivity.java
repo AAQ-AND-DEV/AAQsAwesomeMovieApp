@@ -1,11 +1,15 @@
 package com.aaqanddev.aaqsawesomeandroidapp;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.content.res.Resources;
 
 import android.os.Parcelable;
 import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -21,8 +25,10 @@ import com.aaqanddev.aaqsawesomeandroidapp.Interfaces.MovieApiInterface;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.ConnectionCheckTask;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.MoviesAPIClient;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.SecretApiConstant;
+import com.aaqanddev.aaqsawesomeandroidapp.ViewModels.FaveMovieListViewModel;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieList;
+import com.aaqanddev.aaqsawesomeandroidapp.repos.AaqMovieRepo;
 
 import java.net.ConnectException;
 import java.util.ArrayList;
@@ -44,8 +50,9 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
     AdapterView.OnItemSelectedListener onSortSelectedChangeListener;
     String mSortChoice;
     Parcelable mListState;
+    //If I convert this to LiveData, I don't see any payout right now
     List<AaqMovie> main_activity_movies;
-
+    FaveMovieListViewModel mFavesMovieModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +70,50 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
         main_activity_movies = new ArrayList<>();
 
         setContentView(R.layout.activity_movies);
+
+        //TODO (Q) should all this FaveMoviesSetup be in initViews() or getData()?
+        // Is the viewModel helpful for each movie?
+        //or just faveMovieList? --
+
+        //TODO get ViewModel [this is for faves]
+        mFavesMovieModel = ViewModelProviders.of(this).get(FaveMovieListViewModel.class);
+        //TODO set up observer --
+        /*final Observer<AaqMovieList> mainMovieListObserver =
+                new Observer<AaqMovieList>() {
+                    @Override
+                    public void onChanged(@Nullable List<AaqMovie> aaqMovies) {
+                        //TODO(?) create setMovies() method?!?
+                        mFaveMovies.setMovies(aaqMovies);
+                    }
+                };
+*/
+        final Observer<AaqMovieList> faveMovieListObserver =
+                new Observer<AaqMovieList>() {
+                    @Override
+                    public void onChanged(@Nullable final AaqMovieList aaqMovieList) {
+                        //ah -- this  should be grabbing a layout item
+                        //TODO (figure out the proper target -- probly the RV!)
+                        //I don't want it to automatically display the
+                        //faves -- this will do so, yes? and it would doso in a way
+                        //that doesn't make clear it's a change in the display type
+                        //moviesRv.setMovies(aaqMovieList);
+                        //TODO (sol?) create method that updates this variable
+                        //believe I'll need to make a helper method in AaqMovieList
+                        //i don't think I want to set the View actually
+                        //this will be good
+                        //
+                        //TODO (i) two things a) update member var of faveList (mFaveMovies)
+                        //                    b)
+                        //mFaveMovies.setValue(aaqMovieList);
+                        //oh wait...the whole point of  LiveData is
+                        //to avoid storing  that state in the view!!!!!!
+                        //TODO(duh)
+
+                    }
+                };
+        //connect observer with view
+        mFavesMovieModel.getFaveMovieList().observe(this, faveMovieListObserver);
+
 
         //TODO connect to Db (also  add memberVars applicable)
 
@@ -83,7 +134,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
         outState.putParcelableArrayList("movies", new ArrayList<AaqMovie>(mAdapter.getMovies()));
-        //TODO () pass in the Adapter -- to  maintain adapterPosition
+        //DONE () pass in the Adapter -- to  maintain adapterPosition
         mListState = mGridLayoutManager.onSaveInstanceState();
         outState.putParcelable(getString(R.string.bundle_layout_manager_key), mListState);
     }
@@ -105,33 +156,12 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
            //etc.
             Retrofit movieRetro = MoviesAPIClient.getClientBuilder().build();
             movieApiInterface = movieRetro.create(MovieApiInterface.class);
-            Call<AaqMovieList> movieListCall = movieApiInterface
-                    .doGetMovieList(getResources().getStringArray(R.array.pref_fetch_by_vals)[sortSpinner.getSelectedItemPosition()]
-                            , SecretApiConstant.movieApiConstant,
-                            getResources().getString(R.string.lang_default), getResources().getString(R.string.page_default));
-            movieListCall.enqueue(new Callback<AaqMovieList>(){
 
-                @Override
-                public void onResponse(Call<AaqMovieList> call, Response<AaqMovieList> response) {
-                    ArrayList<AaqMovie> currList = new ArrayList<AaqMovie>();
-                    if (response.isSuccessful()){
-                        AaqMovieList jsonReturned  = response.body();
-
-                        //System.out.println("json returned: " + jsonReturned.toString());
-                        //int pgs = response.body().getPage();
-                        //System.out.println("no. pgs: " + pgs );
-                        if (jsonReturned != null){
-                            mAdapter.updateData(response.body().getMovies());
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<AaqMovieList> call, Throwable t) {
-                    Toast.makeText(MoviesActivity.this, "error: cancelling call", Toast.LENGTH_SHORT).show();
-                    call.cancel();
-                }
-            } );
+            //TODO I change this to making a Repo and getting the movies that way
+            //i believe moving all this to Repo? maybe --> ?
+            //TODO and convert it from Call to a LiveData deal (watch Anuja's vid again)
+            AaqMovieRepo repo = new AaqMovieRepo(this.getApplication());
+            LiveData<List<AaqMovie>> faveMovies = repo.getAllFaveMovies();
         }
 
 

@@ -47,7 +47,16 @@ public class MoviesAPIClient {
 
         return retroMovieBuilder;
     }
-
+/*
+//url for ref:
+//   https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key=<<api_key>>&language=en-US
+    public static URL buildTrailerPathUrl(int movieId){
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority(base_URL_movieDB)
+                .
+    }
+    */
     //should this return a url or a string?
     public static URL buildMoviePosterUrl(String posterSize, String posterPath){
         Uri.Builder builder = new Uri.Builder();

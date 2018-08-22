@@ -15,12 +15,20 @@ import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 @Database(entities = {AaqMovie.class}, version = 1)
 
 public abstract class FavoriteMovieDb extends RoomDatabase {
+
     private static FavoriteMovieDb INSTANCE;
 
     public static FavoriteMovieDb getDb(Context context){
         if(INSTANCE == null) {
-            INSTANCE = Room.databaseBuilder(context.getApplicationContext(),  FavoriteMovieDb.class, "fave_db")
-                    .build();
+            synchronized (FavoriteMovieDb.class){
+                if (INSTANCE == null){
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                            FavoriteMovieDb.class,
+                            "fave_db")
+                            //TODO(A) addCallbacks
+                            .build();
+                }
+                    }
         }
         return INSTANCE;
     }
@@ -45,6 +53,7 @@ public abstract class FavoriteMovieDb extends RoomDatabase {
     public void clearAllTables() {
 
     }
+    //TODO(A) Swap tables method necc. w/out cursor?
 
-    public abstract FavoriteMoviesDao faveMovieModel();
+    public abstract FavoriteMoviesDao faveMovieDao();
 }

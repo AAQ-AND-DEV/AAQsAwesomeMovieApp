@@ -3,27 +3,29 @@ package com.aaqanddev.aaqsawesomeandroidapp.ViewModels;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.aaqanddev.aaqsawesomeandroidapp.Db.FavoriteMovieDb;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
+import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieList;
 
 import java.util.List;
 
 public class FaveMovieListViewModel extends AndroidViewModel {
 
-    private final LiveData<List<AaqMovie>> faveMovieList;
+    private final MutableLiveData<AaqMovieList> faveMovieList;
 
     private FavoriteMovieDb faveDb;
 
     public FaveMovieListViewModel(@NonNull Application application) {
         super(application);
-        faveDb = FavoriteMovieDb.getDb(this.getApplication());
-        faveMovieList = faveDb.faveMovieModel().getAllFaveMovies();
+        faveDb = FavoriteMovieDb.getDb(application);
+        faveMovieList = faveDb.faveMovieDao().getAllFaveMovies();
     }
 
-    public LiveData<List<AaqMovie>> getFaveMovieList(){
+    public LiveData<AaqMovieList> getFaveMovieList(){
         return faveMovieList;
     }
 
@@ -41,7 +43,7 @@ public class FaveMovieListViewModel extends AndroidViewModel {
 
         @Override
         protected Void doInBackground(final AaqMovie... aaqMovies) {
-            db.faveMovieModel().deleteMovie(aaqMovies[0]);
+            db.faveMovieDao().deleteMovie(aaqMovies[0]);
             return null;
         }
     }

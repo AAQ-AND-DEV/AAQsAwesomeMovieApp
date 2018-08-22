@@ -3,9 +3,12 @@ package com.aaqanddev.aaqsawesomeandroidapp.pojo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class AaqMovieList  {
+//TODO  (Q) does this make sense to do? extend arraylist?  (may  change to linkedList
+//and add some method of sorting the list that practices using linked list (TODO(F))
+public class AaqMovieList extends ArrayList<AaqMovie> {
 
     @SerializedName("page")
     @Expose
@@ -23,11 +26,21 @@ public class AaqMovieList  {
 
     @SerializedName("results")
     @Expose
-    private List<AaqMovie> results;
+    private AaqMovieList results;
 
-    public List<AaqMovie> getMovies(){
+    public AaqMovieList getMovies(){
         return results;
     }
+
+    /*
+    //TODO (?) make a setMovies here, for use in the Observer?
+    //actually this will be
+    //TODO(Q) taken care of by setValue(), via LiveData right?
+    public void setMovies(AaqMovieList newMovies){
+        this.results = newMovies.toList(newMovies);
+    }
+    */
+
 //region getters and setters
     public Integer getPage() {
         return page;
@@ -62,7 +75,10 @@ public class AaqMovieList  {
     }
 //endregion
 
-
+    //TODO (Q-R) is this super goofy?
+    private List<AaqMovie> toList(AaqMovieList movieList){
+        return movieList.results;
+    }
 }
 
 //}

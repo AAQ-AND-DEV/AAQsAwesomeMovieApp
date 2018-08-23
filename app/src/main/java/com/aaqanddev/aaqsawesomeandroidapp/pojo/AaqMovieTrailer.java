@@ -2,6 +2,8 @@ package com.aaqanddev.aaqsawesomeandroidapp.pojo;
 
 import android.arch.persistence.room.PrimaryKey;
 import android.graphics.Region;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -15,11 +17,9 @@ import com.google.gson.annotations.SerializedName;
 
 //TODO(?) do i want to implement parcelable?  I would just be passing url string,
 // so i don't think so. could just use savedInstance?
-public class AaqMovieTrailer {
+public class AaqMovieTrailer implements Parcelable{
 
     public AaqMovieTrailer(){}
-
-
 
     @SerializedName("id")
     @Expose
@@ -121,4 +121,43 @@ public class AaqMovieTrailer {
     }
 //endregion
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.iso_639_1);
+        dest.writeString(this.iso_3166_1);
+        dest.writeString(this.key);
+        dest.writeString(this.name);
+        dest.writeString(this.site);
+        dest.writeInt(this.size);
+        dest.writeString(this.type);
+    }
+
+    protected AaqMovieTrailer(Parcel in) {
+        this.id = in.readString();
+        this.iso_639_1 = in.readString();
+        this.iso_3166_1 = in.readString();
+        this.key = in.readString();
+        this.name = in.readString();
+        this.site = in.readString();
+        this.size = in.readInt();
+        this.type = in.readString();
+    }
+
+    public static final Creator<AaqMovieTrailer> CREATOR = new Creator<AaqMovieTrailer>() {
+        @Override
+        public AaqMovieTrailer createFromParcel(Parcel source) {
+            return new AaqMovieTrailer(source);
+        }
+
+        @Override
+        public AaqMovieTrailer[] newArray(int size) {
+            return new AaqMovieTrailer[size];
+        }
+    };
 }

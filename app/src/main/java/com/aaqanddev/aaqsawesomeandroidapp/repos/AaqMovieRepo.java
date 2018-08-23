@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.widget.Toast;
 
 import com.aaqanddev.aaqsawesomeandroidapp.Db.FavoriteMovieDb;
@@ -45,11 +46,21 @@ public class AaqMovieRepo {
     //TODO (F) actually this is only going to grab the AaqMovie
     //from the faveDB --
     //so what will I do instead?
+    //should I try to access the bundle via the repo?
+    //would require passing context, prbly --
+    //DTMS? ahhh...i could pass in the bundle to the getDetailMovie Repo method?
+    //idk but it's actually grabbed from the Intent (via parcelable)
+
+    public LiveData<AaqMovie> getDetailMovie(Bundle bundle){
+
+    }
+        /*
     public  LiveData<AaqMovie> getDetailMovie(int id){
         //TODO (Do I want to make a retroCall from here?)
         //TODO (or set up a Db with all movies)
         //return mFaveDao.getItemById(id);
     }
+*/
 
     public void insert(AaqMovie movie) { new insertMovieTask(mFaveDao).execute(movie);}
 

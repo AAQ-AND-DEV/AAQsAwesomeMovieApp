@@ -41,11 +41,12 @@ import retrofit2.Retrofit;
 
 public class MoviesActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, MovieRVAdapter.MainRecyclerViewClickListener {
 
+    //TODO (I)
     RecyclerView moviesRv;
     private MovieRVAdapter mAdapter;
     GridLayoutManager mGridLayoutManager;
     MovieApiInterface movieApiInterface;
-    //TODO move spinner to AppBar(is that what topBar is called?
+    //TODO (f) move spinner to AppBar(is that what topBar is called?
     Spinner sortSpinner;
     AdapterView.OnItemSelectedListener onSortSelectedChangeListener;
     String mSortChoice;

@@ -8,11 +8,16 @@ package com.aaqanddev.aaqsawesomeandroidapp.pojo;
 
 
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AaqMovieReview {
+public class AaqMovieReview implements Parcelable{
+
+    public AaqMovieReview() {
+    }
 
     @SerializedName("author")
     @Expose
@@ -63,4 +68,38 @@ public class AaqMovieReview {
     @Expose
     private String url;
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.author);
+        dest.writeString(this.content);
+        dest.writeString(this.id);
+        dest.writeString(this.url);
+    }
+
+
+
+    protected AaqMovieReview(Parcel in) {
+        this.author = in.readString();
+        this.content = in.readString();
+        this.id = in.readString();
+        this.url = in.readString();
+    }
+
+    public static final Creator<AaqMovieReview> CREATOR = new Creator<AaqMovieReview>() {
+        @Override
+        public AaqMovieReview createFromParcel(Parcel source) {
+            return new AaqMovieReview(source);
+        }
+
+        @Override
+        public AaqMovieReview[] newArray(int size) {
+            return new AaqMovieReview[size];
+        }
+    };
 }

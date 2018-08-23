@@ -61,3 +61,5 @@ google-services.json
 /captures
 .externalNativeBuild
 com.aaqanddev.aaqsawesomeandroidapp.Utilities.SecretApiConstant
+.idea/caches/build_file_checksums.ser
+app/app.iml

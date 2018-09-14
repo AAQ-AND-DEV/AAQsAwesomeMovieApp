@@ -7,6 +7,7 @@ package com.aaqanddev.aaqsawesomeandroidapp.pojo;
 ////        "url":"https://www.themoviedb.org/review/50d321f419c29559d80bf8fc"}
 
 
+import android.arch.lifecycle.ViewModel;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;

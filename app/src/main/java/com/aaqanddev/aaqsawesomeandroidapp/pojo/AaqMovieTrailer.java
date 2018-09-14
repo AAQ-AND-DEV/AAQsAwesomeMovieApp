@@ -1,5 +1,6 @@
 package com.aaqanddev.aaqsawesomeandroidapp.pojo;
 
+import android.arch.lifecycle.ViewModel;
 import android.arch.persistence.room.PrimaryKey;
 import android.graphics.Region;
 import android.os.Parcel;
@@ -17,7 +18,7 @@ import com.google.gson.annotations.SerializedName;
 
 //TODO(?) do i want to implement parcelable?  I would just be passing url string,
 // so i don't think so. could just use savedInstance?
-public class AaqMovieTrailer implements Parcelable{
+public class AaqMovieTrailer extends ViewModel implements Parcelable{
 
     public AaqMovieTrailer(){}
 

@@ -18,8 +18,14 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+//TODO(Q)  had this extending  ViewModel
+//but since I'm only really interested in the ViewModel
+//holding isFave data (and ID) prbly,
+//make a separate ViewModel?
+//I've seen this achieved for Lists of things --
+
 @Entity
-public class AaqMovie extends ViewModel implements Parcelable  {
+public class AaqMovie implements Parcelable  {
     /*
         TODO(Q) extending ViewModel to expose state of isFavorite
         does that make sense?
@@ -30,6 +36,8 @@ public class AaqMovie extends ViewModel implements Parcelable  {
     public  AaqMovie(String title){
         this.title = title;
     }
+
+    private AaqMovie result;
 
     @Ignore
     public AaqMovie(Integer id, String overview, String posterPath, String title, Double voteAverage) {
@@ -348,6 +356,14 @@ public class AaqMovie extends ViewModel implements Parcelable  {
         isFavorite = favorite;
     }
 
+    //TODO must make a setMovie() method for use in Repo!
+    public void setMovie(AaqMovie movie){
+        result = movie;
+    }
+
+    public AaqMovie getMovie(){
+        return result;
+    }
 //region parceling
     @Override
     public int describeContents() {

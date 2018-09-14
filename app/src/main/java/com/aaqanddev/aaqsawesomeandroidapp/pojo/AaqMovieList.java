@@ -1,5 +1,7 @@
 package com.aaqanddev.aaqsawesomeandroidapp.pojo;
 
+import android.arch.lifecycle.ViewModel;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,7 +10,7 @@ import java.util.List;
 
 //TODO  (Q) does this make sense to do? extend arraylist?  (may  change to linkedList
 //and add some method of sorting the list that practices using linked list (TODO(F))
-public class AaqMovieList extends ArrayList<AaqMovie> {
+public class AaqMovieList extends ViewModel {
 
     @SerializedName("page")
     @Expose
@@ -26,9 +28,9 @@ public class AaqMovieList extends ArrayList<AaqMovie> {
 
     @SerializedName("results")
     @Expose
-    private AaqMovieList results;
+    private List<AaqMovie> results;
 
-    public AaqMovieList getMovies(){
+    public List<AaqMovie> getMovies(){
         return results;
     }
 

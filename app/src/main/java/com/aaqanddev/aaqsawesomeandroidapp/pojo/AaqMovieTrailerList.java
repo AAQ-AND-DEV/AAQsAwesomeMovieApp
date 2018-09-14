@@ -1,5 +1,9 @@
 package com.aaqanddev.aaqsawesomeandroidapp.pojo;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -24,7 +28,7 @@ import java.util.List;
 //        "type":"Featurette"},]}
 //
 
-public class AaqMovieTrailerList {
+public class AaqMovieTrailerList extends ViewModel {
 
         public String getId() {
                 return id;
@@ -40,9 +44,21 @@ public class AaqMovieTrailerList {
 
         @SerializedName("results")
         @Expose
-        private List<AaqMovieTrailer> results;
+        private MutableLiveData<List<AaqMovieTrailer>> results;
 
-        public List<AaqMovieTrailer> getMovieTrailers(){
+        public LiveData<List<AaqMovieTrailer>> getMovieTrailers(){
             return results;
+        }
+
+        //for testing purposes
+        public String trailersToString(List<AaqMovieTrailer> trailers){
+            StringBuilder res = new StringBuilder();
+            for (AaqMovieTrailer trailer: trailers) {
+                res.append(trailer.getId());
+                res.append("\t" + trailer.getKey());
+                res.append("\t" + trailer.getName());
+
+            }
+            return res.toString();
         }
 }

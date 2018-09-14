@@ -31,10 +31,14 @@
     just be top_rated or popular (making it easier?)-->
     <string name="fetch_by_rating_label">by RATING</string>
     <string name="fetch_by_pop_label">by POPULARITY</string>
+    <string name="fetch_by_fave_label">by FAVORITES</string>
 
     <string name="fetch_by_pop">popular</string>
     <string name="fetch_by_rating">top_rated</string>
-
+    <string name="fetch_by_fave">faves</string>
+    <!-- idk i think I need some value here above - b/c it is an array right?-->
+    <string name="trailer_button_default_text">no trailer here</string>
+    <string name="reviews_expand_button_default_text">no expandable review</string>
     <!-- Endpoint paths and Queries -->
     <string name="lang_default">en-US</string>
     <string name="page_default">1</string>

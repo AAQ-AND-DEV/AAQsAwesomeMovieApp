@@ -10,11 +10,20 @@
             name="movie"
             type="com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie"/>
     </data>
-    <android.support.constraint.ConstraintLayout
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/activity_detail_coordinator"
+        android:fitsSystemWindows="true">
+
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".DetailActivity"
-            android:background="@drawable/border">
+            android:layout_height="match_parent">
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".DetailActivity"
+                android:background="@drawable/border">
             <ImageView
                 android:id="@+id/movie_detail_poster_iv"
                 android:layout_width="wrap_content"
@@ -38,7 +47,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/movie_detail_poster_iv"
                 app:layout_constraintBottom_toTopOf="@+id/movie_detail_release_date"
                 />
-        <!-- TODO could set up a function call here to inform the src  based on isFave-->
+            <!-- TODO could set up a function call here to inform the src  based on isFave-->
             <Button
                 android:layout_width="45dp"
                 android:layout_height="45dp"
@@ -101,13 +110,12 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 />
 
-            <ScrollView
+            <android.support.v4.widget.NestedScrollView
                 android:layout_height="wrap_content" android:layout_width="match_parent"
                 android:id="@+id/scroll_detail"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detail_overview_label"
-                app:layout_constraintBottom_toTopOf="@+id/trailersLinLayout"
                 android:padding="@dimen/detail_tv_padding"
                 android:background="@drawable/border_detail_movie"
                 android:layout_margin="@dimen/detail_tv_margin"
@@ -124,23 +132,15 @@
 
                     />
 
-                </ScrollView>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/trailersLinLayout">
-        </LinearLayout>
-        <ScrollView
+            </android.support.v4.widget.NestedScrollView>
+<!--insert trailers and reviews fragments here-->
 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_overview_label"
-            app:layout_constraintBottom_toTopOf="@+id/trailersLinLayout"
-            >
+            </android.support.constraint.ConstraintLayout>
+        </android.support.v4.widget.NestedScrollView>
 
-        </ScrollView>
-       </android.support.constraint.ConstraintLayout>
+
+
+
+    </android.support.design.widget.CoordinatorLayout>
+
 </layout>

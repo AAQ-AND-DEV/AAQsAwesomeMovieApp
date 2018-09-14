@@ -1,5 +1,8 @@
 package com.aaqanddev.aaqsawesomeandroidapp.Db;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.db.SupportSQLiteOpenHelper;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.DatabaseConfiguration;
@@ -9,6 +12,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.aaqanddev.aaqsawesomeandroidapp.AaqMovieAppExecutors;
 import com.aaqanddev.aaqsawesomeandroidapp.Interfaces.FavoriteMoviesDao;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 
@@ -16,31 +20,54 @@ import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 
 public abstract class FavoriteMovieDb extends RoomDatabase {
 
-    private static FavoriteMovieDb INSTANCE;
+    private static FavoriteMovieDb sINSTANCE;
 
-    public static FavoriteMovieDb getDb(Context context){
-        if(INSTANCE == null) {
+    private final MutableLiveData<Boolean> mIsDbCreated = new MutableLiveData<>();
+
+    public static FavoriteMovieDb getDb(final Context context, final AaqMovieAppExecutors executors){
+        if(sINSTANCE == null) {
             synchronized (FavoriteMovieDb.class){
-                if (INSTANCE == null){
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            FavoriteMovieDb.class,
-                            "fave_db")
-                            //TODO(A) addCallbacks
-                            .build();
+                if (sINSTANCE == null){
+                    sINSTANCE = buildDatabase(context, executors);
                 }
                     }
         }
-        return INSTANCE;
+        return sINSTANCE;
     }
 
     public static void destroyInstance(){
-        INSTANCE=  null;
+        sINSTANCE=  null;
     }
 
     @NonNull
     @Override
     protected SupportSQLiteOpenHelper createOpenHelper(DatabaseConfiguration config) {
         return null;
+    }
+
+    private static FavoriteMovieDb buildDatabase(final Context appContext, final AaqMovieAppExecutors executors){
+        return Room.databaseBuilder(appContext.getApplicationContext(),
+                FavoriteMovieDb.class,
+                "fave_db")
+                //done Callback to run on executor  (seen: https://github.com/googlesamples/android-architecture-components/blob/master/BasicSample/app/src/main/java/com/example/android/persistence/db/AppDatabase.java)
+                .addCallback(new Callback() {
+                    @Override
+                    public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                        super.onCreate(db);
+                        executors.getmDiskIO().execute(() ->{
+                            FavoriteMovieDb faveDb = FavoriteMovieDb.getDb(appContext, executors);
+                            faveDb.setDbCreated();
+                        });
+                    }
+                })
+                .build();
+    }
+
+    private void setDbCreated(){
+        mIsDbCreated.postValue(true);
+    }
+    public LiveData<Boolean> getDbCreated(){
+        return mIsDbCreated;
     }
 
     @NonNull
@@ -53,7 +80,7 @@ public abstract class FavoriteMovieDb extends RoomDatabase {
     public void clearAllTables() {
 
     }
-    //TODO(A) Swap tables method necc. w/out cursor?
+    //TODO(U) Swap tables method necc. w/out cursor? make update Table method?
 
     public abstract FavoriteMoviesDao faveMovieDao();
 }

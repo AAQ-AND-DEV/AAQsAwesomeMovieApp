@@ -21,10 +21,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.aaqanddev.aaqsawesomeandroidapp.Adapters.MovieRVAdapter;
+import com.aaqanddev.aaqsawesomeandroidapp.Interfaces.FavoriteMoviesDao;
 import com.aaqanddev.aaqsawesomeandroidapp.Interfaces.MovieApiInterface;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.ConnectionCheckTask;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.MoviesAPIClient;
-import com.aaqanddev.aaqsawesomeandroidapp.Utilities.SecretApiConstant;
 import com.aaqanddev.aaqsawesomeandroidapp.ViewModels.FaveMovieListViewModel;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieList;
@@ -53,22 +53,25 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
     Parcelable mListState;
     //If I convert this to LiveData, I don't see any payout right now
     List<AaqMovie> main_activity_movies;
+
     FaveMovieListViewModel mFavesMovieModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*
+
         if (savedInstanceState != null){
+            //TODO (U) upgrade/convert this to retrieving this data from SharedViewModel?
+            //when
             main_activity_movies = savedInstanceState.getParcelableArrayList(getString(R.string.bundle_movies_key));
             mAdapter.updateData(main_activity_movies);
             mGridLayoutManager.onRestoreInstanceState(mListState);
         } else {
             main_activity_movies = new ArrayList<>();
+            //TODO inside getData() I should invoke the DataManager/repo
+            //via Application?
+            getData();
         }
-        */
-        //TODO must comment out this new ArrayList (going to be in restoreInstanceState null check l8r
-        main_activity_movies = new ArrayList<>();
 
         setContentView(R.layout.activity_movies);
 
@@ -157,12 +160,55 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
            //etc.
             Retrofit movieRetro = MoviesAPIClient.getClientBuilder().build();
             movieApiInterface = movieRetro.create(MovieApiInterface.class);
+            //TODO move this stuff to another class...
 
-            //TODO I change this to making a Repo and getting the movies that way
-            //i believe moving all this to Repo? maybe --> ?
-            //TODO and convert it from Call to a LiveData deal (watch Anuja's vid again)
-            AaqMovieRepo repo = new AaqMovieRepo(this.getApplication());
-            LiveData<List<AaqMovie>> faveMovies = repo.getAllFaveMovies();
+            // done conditional -- if sortSpinner.getSelectedItemPosition()==2, doGetFaves
+            if (sortSpinner.getSelectedItemPosition()==2){
+                //TODO do the Db fetch...via FaveMoviesDao
+
+            }
+            else {
+                //TODO do the retroCall
+
+            }
+            Call<AaqMovieList> movieListCall = movieApiInterface
+                    .doGetMovieList(getResources().getStringArray(R.array.pref_fetch_by_vals)[sortSpinner.getSelectedItemPosition()]
+                            , R.string.api_key,
+                            getResources().getString(R.string.lang_default), getResources().getString(R.string.page_default));
+            movieListCall.enqueue(new Callback<AaqMovieList>(){
+
+                @Override
+                public void onResponse(Call<AaqMovieList> call, Response<AaqMovieList> response) {
+                    ArrayList<AaqMovie> currList = new ArrayList<AaqMovie>();
+                    if (response.isSuccessful()){
+                        AaqMovieList jsonReturned  = response.body();
+
+                        //System.out.println("json returned: " + jsonReturned.toString());
+                        //int pgs = response.body().getPage();
+                        //System.out.println("no. pgs: " + pgs );
+                        if (jsonReturned != null){
+                            mAdapter.updateData(response.body().getMovies());
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AaqMovieList> call, Throwable t) {
+                    Toast.makeText(MoviesActivity.this, "error: cancelling call", Toast.LENGTH_SHORT).show();
+                    call.cancel();
+                }
+            } );
+
+        //TODO I change this to making a Repo and getting the movies that way
+        //i believe moving all this to Repo? maybe --> ?
+        //TODO and convert it from Call to a LiveData deal (watch Anuja's vid again)
+        /*
+        AaqMovieRepo repo = new AaqMovieRepo(this.getApplication());
+        //this needs to be done in a particular fashion
+        //idk enqueue these?
+        //alright so this repo will be calling the
+        LiveData<List<AaqMovie>> faveMovies = repo.getAllFaveMovies();
+        */
         }
 
 
@@ -206,6 +252,8 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
     public void onItemClick(final View v, final int movieId) {
         //TODO(Q) do I want to do anything with this?
         int itemPos = moviesRv.getChildLayoutPosition(v);
+        //TODO could be doing this via a REPO, right?
+        //idk but how? accept the main_movies and itemPos into method?
         AaqMovie movie = main_activity_movies.get(itemPos);
 
         //could make an API call here
@@ -221,14 +269,20 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
         //              ...}
         Intent detailIntent = new Intent(this, MovieDetailActivity.class);
         detailIntent.putExtra("myMovie", movie);
+        //TODO (Q) Make network calls to attain trailers and reviews while activity being
+        //started?
+        // idk is there a way to make that delivered to the activity below? Service?
+        //idk let's look at the Retrofit call (which I will be making from the Repo, yes?)
+
+        //suppose that would get complicated, (unless i added viewModel to trailers/reviews
+        // and LiveData perhaps?)
         this.startActivity(detailIntent);
         //Toast.makeText(this, "i can click and get "+movie.getTitle()+" is surely great?", Toast.LENGTH_SHORT).show();
 
     }
-
+//Method pertains to Sort preferences
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-       //TODO (perhaps check cache? load if null -- taking care of that in getData(), i believe)
         getData();
     }
 

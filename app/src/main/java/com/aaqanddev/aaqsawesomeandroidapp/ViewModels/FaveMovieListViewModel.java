@@ -15,14 +15,17 @@ import java.util.List;
 
 public class FaveMovieListViewModel extends AndroidViewModel {
 
-    private final MutableLiveData<AaqMovieList> faveMovieList;
+    private final MutableLiveData<AaqMovieList> faveMovieList  = new MutableLiveData<>();
 
     private FavoriteMovieDb faveDb;
 
     public FaveMovieListViewModel(@NonNull Application application) {
         super(application);
         faveDb = FavoriteMovieDb.getDb(application);
-        faveMovieList = faveDb.faveMovieDao().getAllFaveMovies();
+        //done setValue  on MutableLiveData
+        //TODO(Q) did postValue instead -- since I think this
+        //will end up on background  thread
+        faveMovieList.postValue();faveDb.faveMovieDao().getAllFaveMovies();
     }
 
     public LiveData<AaqMovieList> getFaveMovieList(){

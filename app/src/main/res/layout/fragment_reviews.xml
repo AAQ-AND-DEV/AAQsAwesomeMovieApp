@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- should I put in the data info? i dont think I'll
+    be setting content here anyway!
+    perhaps include the ViewModel?
+    I don't think that works right with LiveData and dataBinding
+    I believe I may have to observe an observable
+    or somehow do a cast, or create method for converting
+    to the right format.-->
+    <data >
+        <variable
+            name="reviews"
+            type="com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqReviewsList"/>
+    </data>
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/reviews_r_v"            >
+
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.NestedScrollView>
+</layout>

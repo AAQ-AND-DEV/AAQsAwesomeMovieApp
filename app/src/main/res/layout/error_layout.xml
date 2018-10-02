@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/large_text_size_details"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:id="@+id/tv_main_error_msg_disp"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/error_retry_button_label"
+            android:textStyle="bold"
+            android:textSize="@dimen/med_text_size_main_rv"/>
+    
+    </LinearLayout>
+</merge>    

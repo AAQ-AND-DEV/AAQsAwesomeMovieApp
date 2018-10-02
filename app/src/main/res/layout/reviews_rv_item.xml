@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="review"
+            type="com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieReview"></variable>
+
+    </data>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/huge_text_size_main_rv"
+            android:textSize="@dimen/med_text_size_main_rv"
+            android:id="@+id/author_review_tv"
+            android:text="@{review.content}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/review_detail_scroll_vw"
+            />
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/author_review_tv"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/review_detail_scroll_vw"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/small_text_size_main_rv"
+                android:id="@+id/content_review_tv"
+                android:text="@{review.content}"/>
+            </android.support.v4.widget.NestedScrollView>
+    </android.support.constraint.ConstraintLayout>
+</layout>

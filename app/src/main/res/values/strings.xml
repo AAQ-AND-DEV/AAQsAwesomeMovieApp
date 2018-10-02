@@ -37,7 +37,7 @@
     <string name="fetch_by_rating">top_rated</string>
     <string name="fetch_by_fave">faves</string>
     <!-- idk i think I need some value here above - b/c it is an array right?-->
-    <string name="trailer_button_default_text">no trailer here</string>
+    <string name="trailer_button_default_text">Press to view %1$s</string>
     <string name="reviews_expand_button_default_text">no expandable review</string>
     <!-- Endpoint paths and Queries -->
     <string name="lang_default">en-US</string>
@@ -49,6 +49,7 @@
     <string name="size_poster_large">w780</string>
     <string name="poster_fetch_sub_path">t/p/</string>
     <string name="size_poster_rv_default">@string/size_poster_small</string>
-
-
+    <!-- -->
+    <string name="trailers_rv_label">Trailers for %1$s</string>
+    <string name="error_retry_button_label">"wah! I wish it worked that time, click here to retry"</string>
 </resources>

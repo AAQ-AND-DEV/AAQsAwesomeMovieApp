@@ -13,6 +13,7 @@
     <dimen name="detail_tv_padding">12dp</dimen>
     <dimen name="detail_tv_margin">8dp</dimen>
 
+    <dimen name="review_content_size">128dp</dimen>
     <dimen name="rv_tv_size">64dp</dimen>
 
     <dimen name="small_text_size_details">12sp</dimen>

@@ -19,6 +19,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+//I think I did some insane stuff here...hehe
 public class AaqReviewsList extends ViewModel {
 
     AaqMovieRepo repo;
@@ -51,7 +52,7 @@ public class AaqReviewsList extends ViewModel {
         }
         //DTMS?
         else {
-
+            return null;
         }
     }
 

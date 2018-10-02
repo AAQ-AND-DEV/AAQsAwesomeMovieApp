@@ -1,5 +1,6 @@
 package com.aaqanddev.aaqsawesomeandroidapp;
 
+import android.app.FragmentManager;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -28,6 +29,8 @@ import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieTrailerList;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqReviewsList;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.Genre;
 import com.aaqanddev.aaqsawesomeandroidapp.repos.AaqMovieRepo;
+import com.aaqanddev.aaqsawesomeandroidapp.ui.ReviewsFragment;
+import com.aaqanddev.aaqsawesomeandroidapp.ui.TrailerFragment;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -39,18 +42,27 @@ import retrofit2.Retrofit;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
-    DetailMovieViewModel mMovieModel;
+
     //The Subject of the Observer Pattern
     Selector mFaveButtonSelector;
     Button mFaveButton;
     //PRETTY SURE I DON'T WANT TO BE DOING ANY API calls anymore
     //TODO  (U) convert away any View data access code
     //MovieApiInterface movieApiInterface;
+    //I think I'll want to instantiate this once, OnCreate
+    //and pass it to the ViewModel?
     AaqMovieRepo movieRepo;
-    //viewModels for the Reviews and trailers?
-    //does that make sense?
-    AaqReviewsList mReviewsListViewModel;
-    AaqMovieTrailerList mTrailersListViewModel;
+
+    //detailMovieViewModel actually this was going to replace
+    //the following two viewModels (but I'll keep it separate, I think)
+    //uggh..idk back and forth again with this!
+    DetailMovieViewModel mMovieModel;
+    //viewModels for the Reviews and trailers
+    //TODO (cu) delete ref and classes, prbly (unless I would transition
+    //to different purposes for a detail screen in future
+    //TODO (res/dream)
+//    AaqReviewsList mReviewsListViewModel;
+//    AaqMovieTrailerList mTrailersListViewModel;
     //idk should these be liveData?
     //or perhaps these are better done anonymously?
     //or lambda?
@@ -86,6 +98,12 @@ public class MovieDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityMovieDetailBinding viewDataBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail);
+        //I wonder if it will be useful to grab the root of this Binding, sometimes?
+        //idk a way to handle views and process them
+        //ok, so -- actually I should probably be going thru VM!!!
+        //i need to make sure the ViewModel is set with that Movie
+        //on launch
+        //but that would mean
         AaqMovie thisMovie = getIntent().getParcelableExtra("myMovie");
         //TODO debug -- seems like perhaps adding the ImageButton without doing a databinding call is causing a problem in setMovie?
         viewDataBinding.setMovie(thisMovie);
@@ -96,15 +114,34 @@ public class MovieDetailActivity extends AppCompatActivity {
         Retrofit movieRetro = MoviesAPIClient.getClientBuilder().build();
         movieApiInterface = movieRetro.create(MovieApiInterface.class);
 
+        //Get Fragment Manager
+        android.support.v4.app.FragmentManager fragMan = getSupportFragmentManager();
+        //Instantiate TrailersFrag and beginTransac
+        TrailerFragment trailerFrag = new TrailerFragment();
+        fragMan.beginTransaction()
+                .add(R.id.trailers_r_v, trailerFrag)
+                .commit();
+        //Instantiate ReviewsFrag and beginTransac
+        ReviewsFragment reviewsFrag = new ReviewsFragment();
+        fragMan.beginTransaction()
+                .add(R.id.reviews_r_v, reviewsFrag)
+                .commit();
+
         //Set up the ViewModels for trailers and reviews
         // TODO (rf) idk I actually will intend to combine all on this view)
         //could do sub-views//fragment-based approach next
         //and create the viewModel common to all models
-        mReviewsListViewModel = ViewModelProviders.of(this).get(AaqReviewsList.class);
-        mTrailersListViewModel = ViewModelProviders.of(this).get(AaqMovieTrailerList.class);
+        //I think these viewModels are not necessary anymore (just use Movies)
+
+        mMovieModel = ViewModelProviders.of(this).get(DetailMovieViewModel.class);
 
         //observations
         //for Reviews:
+        //ok, so perhaps this goes in frag
+        //and it can observe the ViewModel
+        //so...observe viewModel
+        //on change,maybe
+        // .replace via FragMan
         mReviewsObserver = new Observer<List<AaqMovieReview>>(){
             @Override
             public void onChanged(@Nullable List<AaqMovieReview> aaqMovieReviews) {

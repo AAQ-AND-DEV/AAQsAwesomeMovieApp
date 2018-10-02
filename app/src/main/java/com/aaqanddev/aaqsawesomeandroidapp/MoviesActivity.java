@@ -25,9 +25,11 @@ import com.aaqanddev.aaqsawesomeandroidapp.Interfaces.FavoriteMoviesDao;
 import com.aaqanddev.aaqsawesomeandroidapp.Interfaces.MovieApiInterface;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.ConnectionCheckTask;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.MoviesAPIClient;
+import com.aaqanddev.aaqsawesomeandroidapp.ViewModels.DetailMovieViewModel;
 import com.aaqanddev.aaqsawesomeandroidapp.ViewModels.FaveMovieListViewModel;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieList;
+import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieReview;
 import com.aaqanddev.aaqsawesomeandroidapp.repos.AaqMovieRepo;
 
 import java.net.ConnectException;
@@ -55,11 +57,22 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
     List<AaqMovie> main_activity_movies;
 
     FaveMovieListViewModel mFavesMovieModel;
+    DetailMovieViewModel detailViewModel;
+    AaqMovieAppExecutors mExecutors;
+    AaqMovieRepo mRepo;
+    //TODO adding the FaveDb...prbly want to route everything through the repo, eventually
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //grab executors
+        AaqMovieApp app = new AaqMovieApp();
+        mExecutors = app.getAppExecutors();
+        mRepo = AaqMovieRepo.getInstance(app, mExecutors);
 
+        detailViewModel = ViewModelProviders.of(this).get(DetailMovieViewModel.class);
         if (savedInstanceState != null){
             //TODO (U) upgrade/convert this to retrieving this data from SharedViewModel?
             //when
@@ -79,7 +92,10 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
         // Is the viewModel helpful for each movie?
         //or just faveMovieList? --
 
-        //TODO get ViewModel [this is for faves]
+        //TODO get ViewModel [this is for faves] -- tho I wouldn't want
+        //the view to update or anything, unless it's active
+        //which LiveData and VM will handle, I believe...
+
         mFavesMovieModel = ViewModelProviders.of(this).get(FaveMovieListViewModel.class);
         //TODO set up observer --
         /*final Observer<AaqMovieList> mainMovieListObserver =
@@ -150,6 +166,7 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")){
             getData();
         } else {
+
             main_activity_movies = savedInstanceState.getParcelableArrayList("movies");
             mListState = savedInstanceState.getParcelable(getString(R.string.bundle_layout_manager_key));
 
@@ -252,10 +269,15 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
     public void onItemClick(final View v, final int movieId) {
         //TODO(Q) do I want to do anything with this?
         int itemPos = moviesRv.getChildLayoutPosition(v);
-        //TODO could be doing this via a REPO, right?
+        //TODO (u) could be doing this via a REPO, ?
         //idk but how? accept the main_movies and itemPos into method?
         AaqMovie movie = main_activity_movies.get(itemPos);
 
+        //TODO (?) I think I want to make a ViewModel interaction...
+        //but viewModel is not supposed to know of the activity
+        //so the correct approach
+        //would be to pass that data
+        //update the ViewModel when movie first grabbed, right?
         //could make an API call here
         //but I think i should be making a call to the RVadapter
         //could filter the list of movies (while small) to find the matching movieId
@@ -271,6 +293,19 @@ public class MoviesActivity extends AppCompatActivity implements AdapterView.OnI
         detailIntent.putExtra("myMovie", movie);
         //TODO (Q) Make network calls to attain trailers and reviews while activity being
         //started?
+        //so -- TODO (it) I want to prbly just instantiate the ViewModel  here
+        // TODO (?) set a toggleState for the ViewModel to know which activity is accessing it?
+        // thereby doing detailViewModel.onDetail();
+        //with a click...
+        //i want to initiate the call...idk I may be able to leave an empty observer here?
+        detailViewModel.getmObservableReviewsList().observe(this, new Observer<List<AaqMovieReview>>() {
+            @Override
+            public void onChanged(@Nullable List<AaqMovieReview> aaqMovieReviews) {
+                //TODO I don't actually want the ViewModel to do anything here
+                //idk I just wanted it to start getting the data for trailers/reviews
+                //will this do so?
+            }
+        });
         // idk is there a way to make that delivered to the activity below? Service?
         //idk let's look at the Retrofit call (which I will be making from the Repo, yes?)
 

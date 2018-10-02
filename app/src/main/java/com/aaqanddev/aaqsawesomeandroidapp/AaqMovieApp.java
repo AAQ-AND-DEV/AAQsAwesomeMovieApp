@@ -1,12 +1,14 @@
 package com.aaqanddev.aaqsawesomeandroidapp;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.aaqanddev.aaqsawesomeandroidapp.Db.FavoriteMovieDb;
 import com.aaqanddev.aaqsawesomeandroidapp.repos.AaqMovieRepo;
 
 public class AaqMovieApp extends Application {
 
+    //do i really want to hold these?
     private AaqMovieAppExecutors aAppExecutors;
 
     @Override
@@ -24,6 +26,7 @@ public class AaqMovieApp extends Application {
 
     // DTMS? I don't have a problem keeping this in memory I don't think
     public FavoriteMovieDb getDatabase() {
+
         return FavoriteMovieDb.getDb(this , aAppExecutors);
     }
 
@@ -31,8 +34,12 @@ public class AaqMovieApp extends Application {
     //stay in mem
     //but I think this is a problem (accepting a context into the Application class)
     //IDK using this done here ok?
-    public AaqMovieRepo getRepository() {
-        return AaqMovieRepo.getInstance(this, aAppExecutors);
+    //i think it better to pass in context and appExecs to this
+    public AaqMovieRepo getRepository(Context context, AaqMovieAppExecutors execs) {
+        //is this a good idea?  Idk if passing in
+        //the app context may prevent its Garbage collection?
+        //is this desirable?
+        return AaqMovieRepo.getInstance(context, execs);
     }
 
     public AaqMovieAppExecutors getAppExecutors() {

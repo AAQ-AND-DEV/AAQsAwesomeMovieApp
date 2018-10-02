@@ -46,18 +46,37 @@ public class AaqMovieRepo {
     private final FavoriteMovieDb mFaveDb;
     private final FavoriteMoviesDao mFaveMovieDao;
 
+    //DTMS? I made each of these static,
+    //then initialize them statically
     //mediator for AllFaves (for use with the MoviesActivity call to Faves)
-    private MediatorLiveData<AaqMovieList> mAllObservableFaveMovies;
+    private static MediatorLiveData<AaqMovieList> mAllObservableFaveMovies;
 
     //Are these NOT a good idea as private vars?
     //mediator for detailMovie (when to set?), I think this can only be
     //done upon request
     //is there another way to do that?
-    private MediatorLiveData<AaqMovie> mDetailMovie;
+    private final MediatorLiveData<AaqMovie> mDetailMovie;
     //mediator for Trailers and Reviews
-    private MediatorLiveData<List<AaqMovieTrailer>> mTrailersList;
-    private MediatorLiveData<List<AaqMovieReview>> mReviewsList;
+    private final MediatorLiveData<List<AaqMovieTrailer>> mTrailersList;
+    private final MediatorLiveData<List<AaqMovieReview>> mReviewsList;
+    //does this make sense?
+    private LiveData<List<AaqMovieReview>> mReviewsOutList = new LiveData<List<AaqMovieReview>>() {
+    };
 
+
+    //should these not be static?
+    //can I make a specific
+    // repo = null
+    // command? to make sure these do not persist (will that accomplish the goal)
+    //also, wait, these maybe do want to persist?
+    {
+        mDetailMovie = new MediatorLiveData<>();
+        mAllObservableFaveMovies = new MediatorLiveData<>();
+        mTrailersList = new MediatorLiveData<>();
+        mReviewsList = new MediatorLiveData<>();
+    }
+
+    //I  believe this context will end up being the Application context (as passed thru VM)
     private AaqMovieRepo(Context context, AaqMovieAppExecutors executors){
         //this used to accept the Db -- since been removed to class level
         //mFaveMovieDb = faveDb;
@@ -93,23 +112,22 @@ public class AaqMovieRepo {
        if (sInstance == null){
            synchronized (AaqMovieRepo.class){
                if (sInstance == null){
-                   sInstance = new AaqMovieRepo(app, faveDb, executors);
+                   sInstance = new AaqMovieRepo(app, executors);
                }
            }
        }
        return sInstance;
     }
     private void instantiateMediators(){
-        mDetailMovie = new MediatorLiveData<>();
-        mAllObservableFaveMovies = new MediatorLiveData<>();
-        mTrailersList = new MediatorLiveData<>();
-        mReviewsList = new MediatorLiveData<>();
+        //lol I think all of these are done in specific methods? since they need things like id
+
     }
 
     public  MutableLiveData<AaqMovie> getDetailMovie(int id) {
 
+        mDetailMovie.observe(this, movie -> {
 
-        mDetailMovie.observe(this, movie ->  );
+        }  );
         //done created an anonymous Observer class with a override onChanged()
         mDetailMovie.addSource(movieApiService.doGetMovie(id), res -> {
             res.removeSource
@@ -132,17 +150,18 @@ public class AaqMovieRepo {
         return sDetailInstance;
     }
     */
-    public MutableLiveData<AaqMovieList> getAllFaveMovies() {
-        return mAllObservableFaveMovies;
+    public MutableLiveData<AaqMovieList> getAllFaveMovies()
+    {
+        return mFaveDb.faveMovieDao().getAllFaveMovies();
     }
 
     //done grab the Fave AaqMovie from the faveDB by movieId --
     public MutableLiveData<AaqMovie> getFaveMovieById(int movieId){
-        return  mFaveMovieDb.faveMovieDao().getItemById(movieId);
+        return  mFaveDb.faveMovieDao().getItemById(movieId);
     }
 
     public MutableLiveData<Boolean> getIsFaveMovie(int movieId){
-        return mFaveMovieDb.faveMovieDao().isFaveMovie(movieId);
+        return mFaveDb.faveMovieDao().isFaveMovie(movieId);
     }
     //so what will I do instead?
     //should I try to access the bundle via the repo?
@@ -178,7 +197,7 @@ public class AaqMovieRepo {
     //IDK any other reason to grab context?
     public LiveData<AaqMovieTrailerList> getMovieTrailers(int id){
         //TODO (U) incorporate Executors!
-        mTrailersList.observe();
+        mTrailersList.addSource();
 
                 movieApiService.
                 doGetMovieTrailers(id);
@@ -205,7 +224,10 @@ public class AaqMovieRepo {
                 call.cancel();
             }
         });
+
     }
+
+    public LiveData<List<AaqMovieReview>> getmReviewsOutList
 
 }
 

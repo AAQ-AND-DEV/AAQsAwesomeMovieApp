@@ -23,18 +23,33 @@ import java.util.concurrent.Executor;
 
 public class DetailMovieViewModel extends AndroidViewModel {
 
+    //TODO (u) incorporate a LiveData<List<int>> with ids stored, to check
+    //faveStatus instead of db  check?
+    private final MutableLiveData<Boolean> mIsFave;
+    public  ObservableField<Boolean> isFave = new ObservableField<>();
 
-    private MutableLiveData<Boolean> mIsFave;
-    private MutableLiveData<AaqMovie> mObservableMovie;
-    //I'm not sure what this movie field is doing anymore
-    //public ObservableField<AaqMovie> movie = new ObservableField<>();
-    private int mMovieId;
+    private final MutableLiveData<AaqMovie> mObservableMovie;
+    public ObservableField<AaqMovie> movie = new ObservableField<>();
+    //is this an ok value (default seems to be random, possibly  3-digit)
+    private static final int NOT_SET_CONST = -1;
+    //is there a point to having this, if I have the ObservableMovie?
+    //contemplating setting a default value of -1
+    //to connote set up but not altered
+    private final MutableLiveData<Integer> mMovieId;
+    //i think this observer approach mirrors what is done in detailActivity
+    //only applied to a Retrofit
+    //with
+    public ObservableField<Integer> movieId = new ObservableField<>();
+
 
     private AaqMovieRepo mRepo;
 
     private MutableLiveData<List<AaqMovieTrailer>> mObservableTrailersList;
     private MutableLiveData<List<AaqMovieReview>> mObservableReviewsList;
 
+    public DetailMovieViewModel(Application app){
+
+    }
     //DTMS? using Application, with this default ctor?
     //should this actually be AaqMovieApp instead of Application?
     //TODO (Q)  ok, so I think I want to make methods
@@ -42,7 +57,7 @@ public class DetailMovieViewModel extends AndroidViewModel {
     //so removing that per Randy's advice (I think)
     //TODO (Q) could add ViewModel that accepts a bundle?
     //see some1 passed the Repo into the ViewModel?
-    public DetailMovieViewModel(@NonNull AaqMovieApp app, AaqMovieAppExecutors executors){
+    public DetailMovieViewModel(@NonNull AaqMovieApp app, AaqMovieRepo repo, AaqMovieAppExecutors executors){
         super(app);
 
         //done get db dao instance
@@ -51,26 +66,26 @@ public class DetailMovieViewModel extends AndroidViewModel {
         //per Randy, Repo should not accept this value(movieID)!
         //should it not also accept the bundle?
         //done Repo instantiation here
-        this.mRepo = AaqMovieRepo.getInstance(app, faveDb);
-
+        this.mRepo = repo;
+        this.mMovieId = new MutableLiveData<>();
         this.mObservableMovie = new MutableLiveData<>();
+        this.mIsFave = new MutableLiveData<>();
         this.mObservableTrailersList = new MutableLiveData<>();
         this.mObservableReviewsList = new MutableLiveData<>();
     }
 
-    public LiveData<AaqMovie> getObservableMovie(){
-        //ah...but i have already instantiated it
-        //how will I tell if it's empty?
+    public LiveData<AaqMovie> getObservableMovie(int id){
+        //null check --
+        //make a repo call
         if (mObservableMovie == null){
-            mObservableMovie = new MutableLiveData<AaqMovie>();
-            loadMovie();
+            mRepo.getDetailMovie(id);
         }
 
-        return movie;
+        return mObservableMovie;
     }
 
     public LiveData<List<AaqMovieReview>> getmObservableReviewsList() {
-
+        mObservableMovie.getValue()
         return mObservableReviewsList;
     }
 
@@ -104,8 +119,5 @@ public class DetailMovieViewModel extends AndroidViewModel {
     private void loadTrailers(){
 
     }
-    //TODO relocate to fragment/activity
-    private void subscribeToModel(final DetailMovieViewModel viewModel){
-        viewModel.get
-    }
+
 }

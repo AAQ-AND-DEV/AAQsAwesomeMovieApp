@@ -1,6 +1,6 @@
 package com.aaqanddev.aaqsawesomeandroidapp.Interfaces;
 
-import com.aaqanddev.aaqsawesomeandroidapp.RepositoryException;
+import com.aaqanddev.aaqsawesomeandroidapp.repos.RepositoryException;
 
 public interface IAaqMovieRepository<T extends BaseModel> {
 

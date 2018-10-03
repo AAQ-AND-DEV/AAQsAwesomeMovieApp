@@ -20,13 +20,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 //I think I did some insane stuff here...hehe
-public class AaqReviewsList extends ViewModel {
+public class AaqReviewsList{
 
-    AaqMovieRepo repo;
-
-    public AaqReviewsList (){
-        repo = AaqMovieApp.getRepo()
-    }
+    public AaqReviewsList (){ }
     //region getters and setters
     public int getId() {
         return id;
@@ -45,7 +41,7 @@ public class AaqReviewsList extends ViewModel {
     }
 
     //I have this labeled getResults now
-    public LiveData<List<AaqMovieReview>> getResults() {
+    public LiveData<List<AaqMovieReview>> getReviewListResults() {
 
         if (results != null) {
             return results;

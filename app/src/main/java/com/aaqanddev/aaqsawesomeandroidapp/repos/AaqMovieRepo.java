@@ -1,32 +1,25 @@
 package com.aaqanddev.aaqsawesomeandroidapp.repos;
 
-import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.widget.Toast;
 
-import com.aaqanddev.aaqsawesomeandroidapp.AaqMovieApp;
 import com.aaqanddev.aaqsawesomeandroidapp.AaqMovieAppExecutors;
 import com.aaqanddev.aaqsawesomeandroidapp.Db.FavoriteMovieDb;
 import com.aaqanddev.aaqsawesomeandroidapp.Interfaces.FavoriteMoviesDao;
 import com.aaqanddev.aaqsawesomeandroidapp.Interfaces.MovieApiInterface;
-import com.aaqanddev.aaqsawesomeandroidapp.MoviesActivity;
-import com.aaqanddev.aaqsawesomeandroidapp.R;
-import com.aaqanddev.aaqsawesomeandroidapp.TestingRetroActivity;
+import testing.TestingRetroActivity;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.MoviesAPIClient;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.SecretApiConstant;
-import com.aaqanddev.aaqsawesomeandroidapp.ViewModels.DetailMovieViewModel;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieList;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieReview;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieTrailer;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieTrailerList;
+import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqReviewsList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +27,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 //source: looking at this arch ex https://developer.android.com/jetpack/docs/guide#addendum
 public class AaqMovieRepo {
@@ -46,221 +38,164 @@ public class AaqMovieRepo {
     private final FavoriteMovieDb mFaveDb;
     private final FavoriteMoviesDao mFaveMovieDao;
 
-    //DTMS? I made each of these static,
-    //then initialize them statically
     //mediator for AllFaves (for use with the MoviesActivity call to Faves)
     private static MediatorLiveData<AaqMovieList> mAllObservableFaveMovies;
 
-    //Are these NOT a good idea as private vars?
-    //mediator for detailMovie (when to set?), I think this can only be
-    //done upon request
-    //is there another way to do that?
-    private final MediatorLiveData<AaqMovie> mDetailMovie;
+    private MediatorLiveData<Boolean> mIsFave;
+    //mediator for DetailMovie
+    private MediatorLiveData<AaqMovie> mDetailMovie;
     //mediator for Trailers and Reviews
-    private final MediatorLiveData<List<AaqMovieTrailer>> mTrailersList;
-    private final MediatorLiveData<List<AaqMovieReview>> mReviewsList;
-    //does this make sense?
+    private MediatorLiveData<List<AaqMovieTrailer>> mTrailersList;
+    private MediatorLiveData<List<AaqMovieReview>> mReviewsList;
+    //idk if i use a membrVar for access, I don't think so...
     private LiveData<List<AaqMovieReview>> mReviewsOutList = new LiveData<List<AaqMovieReview>>() {
     };
 
+    private int mMovieId;
 
-    //should these not be static?
-    //can I make a specific
-    // repo = null
-    // command? to make sure these do not persist (will that accomplish the goal)
-    //also, wait, these maybe do want to persist?
-    {
+    //I think I need a bunch of Observers to enact MediatorLiveData correctly.
+    //just leaving it without Mediating...
+
+    private void instantiateMediators() {
         mDetailMovie = new MediatorLiveData<>();
+        mIsFave = new MediatorLiveData<>();
         mAllObservableFaveMovies = new MediatorLiveData<>();
         mTrailersList = new MediatorLiveData<>();
         mReviewsList = new MediatorLiveData<>();
     }
 
+
     //I  believe this context will end up being the Application context (as passed thru VM)
-    private AaqMovieRepo(Context context, AaqMovieAppExecutors executors){
-        //this used to accept the Db -- since been removed to class level
-        //mFaveMovieDb = faveDb;
-        //setting up Retro
-        //do I need to close Retrofit somewhere?
+    private AaqMovieRepo(Context context, AaqMovieAppExecutors executors) {
+
         mExecutors = executors;
         //set up Db
         mFaveDb = FavoriteMovieDb.getDb(context, executors);
         mFaveMovieDao = mFaveDb.faveMovieDao();
         //Set up Retro Service
         movieApiService = MoviesAPIClient.getClientBuilder().build().create(MovieApiInterface.class);
+
         instantiateMediators();
 
 
         //how can I access the current detailMovie?
         //it's got to be passed in (for sure, right? DTMS?
-        mAllObservableFaveMovies.addSource(mFaveMovieDb.faveMovieDao().getAllFaveMovies(),
+        mAllObservableFaveMovies.addSource(mFaveDb.faveMovieDao().getAllFaveMovies(),
                 faveMovieEntities -> {
-                    if (mFaveMovieDb.getDbCreated().getValue() != null){
+                    if (mFaveDb.getDbCreated().getValue() != null) {
                         //if Db exists, post the list to this MediatorLiveData
                         mAllObservableFaveMovies.postValue(faveMovieEntities);
                     }
                 });
 
-
-        //TODO (i) make declareObservers() helper method
-       //I guess this is an advantage of just one viewModel
-        mDetailMovie.addSource(movieApiService.doGetMovie(movieId), );
     }
-
 
     public static AaqMovieRepo getInstance(Context app, AaqMovieAppExecutors executors) {
-       if (sInstance == null){
-           synchronized (AaqMovieRepo.class){
-               if (sInstance == null){
-                   sInstance = new AaqMovieRepo(app, executors);
-               }
-           }
-       }
-       return sInstance;
-    }
-    private void instantiateMediators(){
-        //lol I think all of these are done in specific methods? since they need things like id
-
-    }
-
-    public  MutableLiveData<AaqMovie> getDetailMovie(int id) {
-
-        mDetailMovie.observe(this, movie -> {
-
-        }  );
-        //done created an anonymous Observer class with a override onChanged()
-        mDetailMovie.addSource(movieApiService.doGetMovie(id), res -> {
-            res.removeSource
-        })
-        return mDetailMovie;
-        /*
-         */
-    }
-    /*
-    public static AaqMovieRepo getInstance(final FavoriteMovieDb faveDb, final int movieId ){
-        if (sDetailInstance == null){
-            //this may cause a problem?
-            //DTMS? I am synchornizing this class in two methods, that's ok, right?
-            synchronized (AaqMovieRepo.class){
-                if (sDetailInstance == null){
-                    sDetailInstance = new AaqMovieRepo(faveDb, movieId);
+        if (sInstance == null) {
+            synchronized (AaqMovieRepo.class) {
+                if (sInstance == null) {
+                    sInstance = new AaqMovieRepo(app, executors);
                 }
             }
         }
-        return sDetailInstance;
-    }
-    */
-    public MutableLiveData<AaqMovieList> getAllFaveMovies()
-    {
-        return mFaveDb.faveMovieDao().getAllFaveMovies();
+        return sInstance;
     }
 
-    //done grab the Fave AaqMovie from the faveDB by movieId --
-    public MutableLiveData<AaqMovie> getFaveMovieById(int movieId){
-        return  mFaveDb.faveMovieDao().getItemById(movieId);
+    public MutableLiveData<AaqMovie> getDetailMovie(int movieId) {
+        mMovieId = movieId;
+
+        movieApiService.doGetMovie(movieId).enqueue(new Callback<AaqMovie>() {
+            @Override
+            public void onResponse(Call<AaqMovie> call, Response<AaqMovie> response) {
+                if (response.isSuccessful()) {
+                    mDetailMovie.setValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AaqMovie> call, Throwable t) {
+                mDetailMovie.setValue(null);
+            }
+        });
+        //TODO (u) get trailers and reviews here? (add approp vars to model
+
+        return mDetailMovie;
     }
 
-    public MutableLiveData<Boolean> getIsFaveMovie(int movieId){
-        return mFaveDb.faveMovieDao().isFaveMovie(movieId);
-    }
-    //so what will I do instead?
-    //should I try to access the bundle via the repo?
-    //would require passing context, prbly --
-    //DTMS? ahhh...i could pass in the bundle to the getDetailMovie Repo method?
-    //idk but it's actually grabbed from the Intent (via parcelable)
-//
-//    public LiveData<AaqMovie> getDetailMovie(Bundle bundle){
-//
-//    }
-
-
-
-    public void insertMovie(AaqMovie movie) {
-        new insertMovieTask(mFaveMovieDb.faveMovieDao()).execute(movie);
+    public MutableLiveData<AaqMovieList> getAllFaveMovies() {
+        return (MutableLiveData<AaqMovieList>) mFaveDb.faveMovieDao().getAllFaveMovies();
     }
 
-    //TODO (u) run on executor -- or is that done above?
-    private static class insertMovieTask extends AsyncTask<AaqMovie, Void,Void>{
-        private FavoriteMoviesDao mAsyncDao;
-
-        insertMovieTask(FavoriteMoviesDao dao){ mAsyncDao = dao;}
-
-        @Override
-        protected Void doInBackground(final AaqMovie ... movies){
-            mAsyncDao.addFaveMovie(movies[0]);
-            return null;
-        }
+    //get FaveMovie by Id
+    public MutableLiveData<AaqMovie> getFaveMovieById(int movieId) {
+        return (MutableLiveData<AaqMovie>) mFaveDb.faveMovieDao().getItemById(movieId);
     }
-    //TODO add trailers/reviews fetch stuff too?
-    //can we put the
-    //get context? for the Toast msg?
-    //IDK any other reason to grab context?
-    public LiveData<AaqMovieTrailerList> getMovieTrailers(int id){
-        //TODO (U) incorporate Executors!
-        mTrailersList.addSource();
 
-                movieApiService.
-                doGetMovieTrailers(id);
-        trailersCall.enqueue(new Callback<AaqMovieTrailerList>() {
+    //get isFaveMovie result
+    public MutableLiveData<Boolean> getIsFaveMovie(int movieId) {
+        return (MutableLiveData<Boolean>) mFaveDb.faveMovieDao().isFaveMovie(movieId);
+    }
+
+    public LiveData<List<AaqMovieTrailer>> getMovieTrailers(int id) {
+
+        movieApiService.
+                doGetMovieTrailers(id).getValue().enqueue(new Callback<AaqMovieTrailerList>() {
             @Override
             public void onResponse(Call<AaqMovieTrailerList> call, Response<AaqMovieTrailerList> response) {
-                List<AaqMovieTrailer> currTrailers = new ArrayList<>();
-                if (response.isSuccessful()){
-                    currTrailers = response.body().getMovieTrailers();
-                    //TODO i think i made a mistake here (?need explicit conversion to List<T>?
-                    if (currTrailers != null){
-                        //TODO to convert Retro response to a LiveDataObject
-                        mTrailersList.addSource();
-                        //this was testing stuff (from elsewhere)
-                        //sampleTrailers.append(jsonReturned.trailersToString(response.body().getMovieTrailers()));
-                        //testTrailers.setText(sampleTrailers);
-                    }
+                if (response.isSuccessful()) {
+                    if (response.body() != null)
+                        mTrailersList.setValue(response.body().getMovieTrailers().getValue());
+
                 }
             }
 
             @Override
             public void onFailure(Call<AaqMovieTrailerList> call, Throwable t) {
-                Toast.makeText(TestingRetroActivity.this, "error: cancelling call", Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
                 call.cancel();
             }
         });
-
+        return mTrailersList;
     }
 
-    public LiveData<List<AaqMovieReview>> getmReviewsOutList
-
-}
-
-        /* TODO (?) maybe this is needed elsewhere? in detailActivity?
-        final MutableLiveData<List<AaqMovie>> data = new MutableLiveData<>();
-        //TODO here need to pass in parameters --
-        movieApiService.doGetMovieList()
-        Call<AaqMovieList> movieListCall = movieApiInterface
-                .doGetMovieList(getResources().getStringArray(R.array.pref_fetch_by_vals)[sortSpinner.getSelectedItemPosition()]
-                        , SecretApiConstant.movieApiConstant,
-                        getResources().getString(R.string.lang_default), getResources().getString(R.string.page_default));
-        movieListCall.enqueue(new Callback<AaqMovieList>(){
-
+    public LiveData<List<AaqMovieReview>> getMovieReviews(int id) {
+        movieApiService.
+                doGetReviewsList(id).getValue().enqueue(new Callback<AaqReviewsList>() {
             @Override
-            public void onResponse(Call<AaqMovieList> call, Response<AaqMovieList> response) {
-                ArrayList<AaqMovie> currList = new ArrayList<AaqMovie>();
-                if (response.isSuccessful()){
-                    AaqMovieList jsonReturned  = response.body();
-
-                    //System.out.println("json returned: " + jsonReturned.toString());
-                    //int pgs = response.body().getPage();
-                    //System.out.println("no. pgs: " + pgs );
-                    if (jsonReturned != null){
-                        mAdapter.updateData(response.body().getMovies());
+            public void onResponse(Call<AaqReviewsList> call, Response<AaqReviewsList> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        mReviewsList.setValue(response.body().getReviewListResults().getValue());
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<AaqMovieList> call, Throwable t) {
-                Toast.makeText(MoviesActivity.this, "error: cancelling call", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<AaqReviewsList> call, Throwable t) {
+                t.printStackTrace();
                 call.cancel();
             }
-        } );
-    */
+        });
+        return mReviewsList;
+    }
+
+    public void insertMovie(AaqMovie movie) {
+        new insertMovieTask(mFaveDb.faveMovieDao()).execute(movie);
+    }
+
+    //TODO (u) run on executor -- or is that done above?
+    private static class insertMovieTask extends AsyncTask<AaqMovie, Void, Void> {
+        private FavoriteMoviesDao mAsyncDao;
+
+        insertMovieTask(FavoriteMoviesDao dao) {
+            mAsyncDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final AaqMovie... movies) {
+            mAsyncDao.addFaveMovie(movies[0]);
+            return null;
+        }
+    }
+}
 

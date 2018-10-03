@@ -17,6 +17,8 @@ import com.aaqanddev.aaqsawesomeandroidapp.repos.AaqMovieRepo;
 
 import java.util.List;
 
+//TODO keep for use when creating TrailersFrag independently?
+//no real reason to do this, aside from practice
 public class TrailersFragViewModel extends AndroidViewModel {
 
     //must be Application context!
@@ -27,6 +29,7 @@ public class TrailersFragViewModel extends AndroidViewModel {
             AaqMovieRepo repo) {
 
         super(application);
+        mContext = application;
 
     }
     public final LiveData<Boolean> trailersLoading =
@@ -59,9 +62,6 @@ public class TrailersFragViewModel extends AndroidViewModel {
 
 
 
-    public final
-
-
     public LiveData<List<AaqMovieTrailer>> getTrailers(int movieId){
         if (trailers == null){
             trailers = new MutableLiveData<List<AaqMovieTrailer>>();
@@ -74,7 +74,8 @@ public class TrailersFragViewModel extends AndroidViewModel {
         //forget about using a repo for this?
         //getting non-static context error
         //repo = AaqMovieApp.getRepository();
-        repo = new AaqMovieRepo();
-
+        repo = new AaqMovieApp().getRepository(mContext,
+                (new AaqMovieApp()).getAppExecutors() );
+        repo.getMovieTrailers(movieId);
     }
 }

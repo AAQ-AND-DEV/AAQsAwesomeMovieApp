@@ -18,14 +18,14 @@ import java.util.List;
 public interface FavoriteMoviesDao {
     //IDK maybe this should be LiveData
     @Query("select * from AaqMovie")
-    MutableLiveData<AaqMovieList> getAllFaveMovies();
+    LiveData<AaqMovieList> getAllFaveMovies();
 
     //done LiveData for isFave bool)
     @Query("SELECT isFavorite FROM AaqMovie WHERE id = :movieId")
-    MutableLiveData<Boolean> isFaveMovie(int movieId);
+    LiveData<Boolean> isFaveMovie(int movieId);
 
     @Query("select * from AaqMovie where id= :id")
-    MutableLiveData<AaqMovie> getItemById(int id);
+    LiveData<AaqMovie> getItemById(int id);
 
     @Insert(onConflict = REPLACE)
     void addFaveMovie(AaqMovie movie);

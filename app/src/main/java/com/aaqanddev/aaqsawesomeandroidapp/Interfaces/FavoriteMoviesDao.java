@@ -18,7 +18,7 @@ import java.util.List;
 public interface FavoriteMoviesDao {
     //IDK maybe this should be LiveData
     @Query("select * from AaqMovie")
-    LiveData<AaqMovieList> getAllFaveMovies();
+    LiveData<List<AaqMovie>> getAllFaveMovies();
 
     //done LiveData for isFave bool)
     @Query("SELECT isFavorite FROM AaqMovie WHERE id = :movieId")

@@ -12,8 +12,10 @@ import com.aaqanddev.aaqsawesomeandroidapp.Db.FavoriteMovieDb;
 import com.aaqanddev.aaqsawesomeandroidapp.Interfaces.FavoriteMoviesDao;
 import com.aaqanddev.aaqsawesomeandroidapp.Interfaces.MovieApiInterface;
 import testing.TestingRetroActivity;
+
+import com.aaqanddev.aaqsawesomeandroidapp.R;
+import com.aaqanddev.aaqsawesomeandroidapp.Utilities.ConnectionCheckTask;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.MoviesAPIClient;
-import com.aaqanddev.aaqsawesomeandroidapp.Utilities.SecretApiConstant;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieList;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieReview;
@@ -21,6 +23,7 @@ import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieTrailer;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieTrailerList;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqReviewsList;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +41,8 @@ public class AaqMovieRepo {
     private final FavoriteMovieDb mFaveDb;
     private final FavoriteMoviesDao mFaveMovieDao;
 
+    private LiveData<Boolean> mHasInternet;
+
     //mediator for AllFaves (for use with the MoviesActivity call to Faves)
     private static MediatorLiveData<AaqMovieList> mAllObservableFaveMovies;
 
@@ -47,9 +52,11 @@ public class AaqMovieRepo {
     //mediator for Trailers and Reviews
     private MediatorLiveData<List<AaqMovieTrailer>> mTrailersList;
     private MediatorLiveData<List<AaqMovieReview>> mReviewsList;
+
     //idk if i use a membrVar for access, I don't think so...
     private LiveData<List<AaqMovieReview>> mReviewsOutList = new LiveData<List<AaqMovieReview>>() {
     };
+    private Context mContext;
 
     private int mMovieId;
 
@@ -60,6 +67,7 @@ public class AaqMovieRepo {
         mDetailMovie = new MediatorLiveData<>();
         mIsFave = new MediatorLiveData<>();
         mAllObservableFaveMovies = new MediatorLiveData<>();
+        //could use Transformations here instead of in ViewModel?
         mTrailersList = new MediatorLiveData<>();
         mReviewsList = new MediatorLiveData<>();
     }
@@ -67,7 +75,7 @@ public class AaqMovieRepo {
 
     //I  believe this context will end up being the Application context (as passed thru VM)
     private AaqMovieRepo(Context context, AaqMovieAppExecutors executors) {
-
+        mContext  = context;
         mExecutors = executors;
         //set up Db
         mFaveDb = FavoriteMovieDb.getDb(context, executors);
@@ -77,9 +85,6 @@ public class AaqMovieRepo {
 
         instantiateMediators();
 
-
-        //how can I access the current detailMovie?
-        //it's got to be passed in (for sure, right? DTMS?
         mAllObservableFaveMovies.addSource(mFaveDb.faveMovieDao().getAllFaveMovies(),
                 faveMovieEntities -> {
                     if (mFaveDb.getDbCreated().getValue() != null) {
@@ -121,7 +126,7 @@ public class AaqMovieRepo {
 
         return mDetailMovie;
     }
-
+/*
     public MutableLiveData<AaqMovieList> getAllFaveMovies() {
         return (MutableLiveData<AaqMovieList>) mFaveDb.faveMovieDao().getAllFaveMovies();
     }
@@ -130,10 +135,11 @@ public class AaqMovieRepo {
     public MutableLiveData<AaqMovie> getFaveMovieById(int movieId) {
         return (MutableLiveData<AaqMovie>) mFaveDb.faveMovieDao().getItemById(movieId);
     }
-
+*/
     //get isFaveMovie result
     public MutableLiveData<Boolean> getIsFaveMovie(int movieId) {
-        return (MutableLiveData<Boolean>) mFaveDb.faveMovieDao().isFaveMovie(movieId);
+        return (MutableLiveData<Boolean>) mFaveDb.faveMovieDao()
+                .isFaveMovie(movieId);
     }
 
     public LiveData<List<AaqMovieTrailer>> getMovieTrailers(int id) {
@@ -159,31 +165,49 @@ public class AaqMovieRepo {
     }
 
     public LiveData<List<AaqMovieReview>> getMovieReviews(int id) {
-        movieApiService.
-                doGetReviewsList(id).getValue().enqueue(new Callback<AaqReviewsList>() {
+        new ConnectionCheckTask(new ConnectionCheckTask.Consumer() {
             @Override
-            public void onResponse(Call<AaqReviewsList> call, Response<AaqReviewsList> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        mReviewsList.setValue(response.body().getReviewListResults().getValue());
-                    }
-                }
-            }
+            public void accept(Boolean internet) throws ConnectException {
+                if (internet) {
+                    movieApiService.
+                            doGetReviewsList(id).getValue().enqueue(new Callback<AaqReviewsList>() {
+                        @Override
+                        public void onResponse(Call<AaqReviewsList> call, Response<AaqReviewsList> response) {
+                            if (response.isSuccessful()) {
+                                if (response.body() != null) {
+                                    mReviewsList.setValue(response.body().getReviewListResults().getValue());
 
-            @Override
-            public void onFailure(Call<AaqReviewsList> call, Throwable t) {
-                t.printStackTrace();
-                call.cancel();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<AaqReviewsList> call, Throwable t) {
+                            t.printStackTrace();
+                            call.cancel();
+                        }
+                    });
+
+                } else {
+                    Toast.makeText(mContext,
+                            mContext.getResources().getString(R.string.error_retry_button_label),
+                            Toast.LENGTH_LONG);
+                }
+                throw new ConnectException("unable to connect to Socket");
             }
         });
         return mReviewsList;
+
+    }
+    public void deleteMovie(AaqMovie movie){
+        new deleteMovieTask(mFaveDb.faveMovieDao()).execute(movie);
     }
 
     public void insertMovie(AaqMovie movie) {
         new insertMovieTask(mFaveDb.faveMovieDao()).execute(movie);
     }
 
-    //TODO (u) run on executor -- or is that done above?
+    //done run on executor via instantiation, i think DTMS?
     private static class insertMovieTask extends AsyncTask<AaqMovie, Void, Void> {
         private FavoriteMoviesDao mAsyncDao;
 
@@ -194,6 +218,20 @@ public class AaqMovieRepo {
         @Override
         protected Void doInBackground(final AaqMovie... movies) {
             mAsyncDao.addFaveMovie(movies[0]);
+            return null;
+        }
+    }
+
+    private static class  deleteMovieTask extends AsyncTask<AaqMovie, Void, Void> {
+        private FavoriteMoviesDao mAsyncDao;
+
+        deleteMovieTask(FavoriteMoviesDao dao){
+            mAsyncDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(AaqMovie... aaqMovies) {
+            mAsyncDao.deleteMovie(aaqMovies[0]);
             return null;
         }
     }

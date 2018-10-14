@@ -23,9 +23,12 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
 
     private ReviewRecyclerViewListener mListener;
     List<AaqMovieReview> mReviews;
-    //TODO (u) add binding also add
+    //get binding
+    private ReviewsRvItemBinding binding;
     //quoting from the review in db: "seiht wosx oi"
     //interactivity with reviews
+
+    public ReviewsAdapter(){}
 
     public ReviewsAdapter(List<AaqMovieReview> reviews, ReviewRecyclerViewListener reviewClickListener){
         mListener = reviewClickListener;
@@ -35,7 +38,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
     @NonNull
     @Override
     public ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ReviewsRvItemBinding binding = DataBindingUtil
+        binding = DataBindingUtil
                 .inflate(LayoutInflater.from(parent.getContext()), R.layout.reviews_rv_item,
                         parent, false);
         //binding.authorReviewTv

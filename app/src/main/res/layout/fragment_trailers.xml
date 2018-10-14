@@ -6,12 +6,6 @@
         <variable
             name="viewModel"
             type="com.aaqanddev.aaqsawesomeandroidapp.ViewModels.DetailMovieViewModel"></variable>
-        <variable
-            name="movie"
-            type="com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie"></variable>
-        <variable
-            name="trailers"
-            type="com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieTrailerList"></variable>
     </data>
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -20,7 +14,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/large_text_size_main_rv"
-                android:text="@{@string/trailers_rv_label(viewModel.observableMovie.title)}"/>
+                android:text="@{@string/trailers_rv_label(viewModel.movie.title)}"/>
             <android.support.v4.widget.NestedScrollView
             android:id="@+id/trailers_scroll_view"
             android:layout_width="match_parent"

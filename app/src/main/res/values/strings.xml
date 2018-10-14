@@ -52,4 +52,5 @@
     <!-- -->
     <string name="trailers_rv_label">Trailers for %1$s</string>
     <string name="error_retry_button_label">"wah! I wish it worked that time, click here to retry"</string>
+    <string name="error_no_internet_msg">"sorry, try again when you have internet"</string>
 </resources>

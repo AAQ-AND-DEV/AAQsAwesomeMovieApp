@@ -134,7 +134,9 @@
 
             </android.support.v4.widget.NestedScrollView>
 <!--insert trailers and reviews fragments here-->
+    <include layout="@layout/fragment_trailers"/>
 
+    <include layout="@layout/fragment_reviews"/>
             </android.support.constraint.ConstraintLayout>
         </android.support.v4.widget.NestedScrollView>
 

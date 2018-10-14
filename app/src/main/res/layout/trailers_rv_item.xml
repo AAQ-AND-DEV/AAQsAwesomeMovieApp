@@ -9,6 +9,6 @@
     <Button
         android:layout_width="match_parent" android:layout_height="match_parent"
         android:id="@+id/trailer_item_button"
-        android:text="@{String.format(string/trailer_button_default_text(trailer.name))}">
+        android:text="@{String.format(@string/trailer_button_default_text(trailer.name))}">
      </Button>
 </layout>

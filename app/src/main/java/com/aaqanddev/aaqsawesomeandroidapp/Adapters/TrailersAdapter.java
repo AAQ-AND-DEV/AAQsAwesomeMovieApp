@@ -1,14 +1,13 @@
 package com.aaqanddev.aaqsawesomeandroidapp.Adapters;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.aaqanddev.aaqsawesomeandroidapp.R;
-import com.aaqanddev.aaqsawesomeandroidapp.Utilities.YtVidFetchIntentHelperImpl;
 import com.aaqanddev.aaqsawesomeandroidapp.databinding.TrailersRvItemBinding;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieTrailer;
 
@@ -17,6 +16,7 @@ import java.util.List;
 public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.TrailerViewHolder>{
 
     private List<AaqMovieTrailer> mTrailers;
+    private TrailersRvItemBinding binding;
 
     TrailersRVClickListener mTrailerClickListener;
 
@@ -34,19 +34,26 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
     @NonNull
     @Override
     public TrailerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context parentContext = parent.getContext();
-        View trailerView = LayoutInflater.from(parentContext).inflate(R.layout.trailers_rv_item, parent, false);
-        trailerView.setFocusable(true);
-        trailerView.setClickable(true);
-        TrailersAdapter.TrailerViewHolder trailerViewHolder = new TrailersAdapter.TrailerViewHolder(trailerView);
-        return trailerViewHolder;
+
+        binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.trailers_rv_item,
+                parent, false);
+
+        //trailerView.setFocusable(true);
+        //trailerView.setClickable(true);
+        return new TrailerViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TrailerViewHolder holder, final int pos) {
         //I reach into Repo and grab data?
         //no...this member variable should suffice
-        holder.bind(pos);
+        if (mTrailers != null){
+            AaqMovieTrailer trailer = mTrailers.get(pos);
+            holder.binding.setTrailer(trailer);
+            //DTMS?
+            holder.binding.executePendingBindings();
+
+        }
     }
 
     @Override
@@ -56,7 +63,10 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
 
     @Override
     public int getItemCount() {
-        return 0;
+        if (mTrailers != null){
+            return mTrailers.size();
+        }
+            return 0;
     }
 
     public class TrailerViewHolder extends RecyclerView.ViewHolder

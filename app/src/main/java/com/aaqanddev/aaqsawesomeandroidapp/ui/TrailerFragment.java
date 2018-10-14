@@ -5,6 +5,8 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,14 +32,33 @@ import java.util.List;
 
 public class TrailerFragment extends Fragment{
 
+    private static final String MOVIE_V_M_SYMB = "movieViewModelSymbol";
+    private static final String MOVIE_ID_BUNDLE_KEY = "bundleMovieKey";
+
     TrailersAdapter adapter;
     RecyclerView trailersRV;
     //TODO  I should have this LiveData (I believe)
     //OR not here at all, so it's not holding data?
     List<AaqMovieTrailer> mTrailers;
     DetailMovieViewModel mDetailModel;
+    FragmentTrailersBinding binding;
 
+    public static TrailerFragment newInstance(int id) {
+        TrailerFragment f = new TrailerFragment();
+
+        Bundle args = new Bundle();
+        args.putInt(MOVIE_ID_BUNDLE_KEY, id);
+        f.setArguments(args);
+        return f;
+    }
     public TrailerFragment(){}
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //should I grab from viewModel?
+        outState.putInt(MOVIE_ID_BUNDLE_KEY, mDetailModel.movieId.get());
+    }
 
     @Nullable
     @Override
@@ -45,11 +66,22 @@ public class TrailerFragment extends Fragment{
         //Do I need to explicitly       //deploy the mMainThread
         //for View stuff?  I'm going to go with no...and assume Android runs fragments always main.
         //actually, I think this will be the binding
+        //I was  getting the binding elsewhere!
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_trailers, container, false);
+        return binding.getRoot();
 
-        View rootView = inflater.inflate(R.layout.fragment_trailers, container, false);
+        //TODO probly grab the Bundle for accessing trailer info
+        //TODO (u) but this should be done DTMS? via repository,right?
+        //idk set Adapter check Rakesh and ryan's repos to see if fragments should have globals
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         //get RecyclerView
-        RecyclerView trailers_rv = (RecyclerView) rootView.findViewById(R.id.trailers_r_v);
-        //i dont think this stuff should be in here?
+        //RecyclerView trailers_rv =
+
         mDetailModel = ViewModelProviders.of(getActivity()).get(DetailMovieViewModel.class);
         mDetailModel.getmObservableTrailersList().observe(this, new Observer<List<AaqMovieTrailer>>() {
             @Override
@@ -57,7 +89,8 @@ public class TrailerFragment extends Fragment{
                 if (aaqMovieTrailers != null){
                     //instantiate a new Adapter and all
                     adapter = new TrailersAdapter(aaqMovieTrailers);
-                    //Should I actually be making a swapAdapter() method?
+                    //Should I actually be making a swapAdapter()
+                    // or using swapLists() method ?
                     //
                     adapter.setmTrailerClickListener(new TrailersAdapter.TrailersRVClickListener() {
                         @Override
@@ -75,11 +108,8 @@ public class TrailerFragment extends Fragment{
 
             }
         });
-        return rootView;
-        //TODO probly grab the Bundle for accessing trailer info
-        //TODO (u) but this should be done DTMS? via repository,right?
-        //idk set Adapter check Rakesh and ryan's repos to see if fragments should have globals
     }
+
     private class YtVidFetchIntentHelperImpl implements VideoFetchIntentHelper{
 
         @Override

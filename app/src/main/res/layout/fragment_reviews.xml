@@ -11,6 +11,9 @@
         <variable
             name="reviews"
             type="com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqReviewsList"/>
+        <variable
+            name="viewModel"
+            type="com.aaqanddev.aaqsawesomeandroidapp.ViewModels.DetailMovieViewModel"/>
     </data>
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"

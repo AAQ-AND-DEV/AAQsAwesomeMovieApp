@@ -9,15 +9,22 @@ import android.arch.persistence.room.DatabaseConfiguration;
 import android.arch.persistence.room.InvalidationTracker;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverter;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.aaqanddev.aaqsawesomeandroidapp.AaqMovieAppExecutors;
 import com.aaqanddev.aaqsawesomeandroidapp.Interfaces.FavoriteMoviesDao;
+import com.aaqanddev.aaqsawesomeandroidapp.Utilities.DataConverter;
+import com.aaqanddev.aaqsawesomeandroidapp.Utilities.converters.GenreConverter;
+import com.aaqanddev.aaqsawesomeandroidapp.Utilities.converters.SpokenLangConverter;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 
 @Database(entities = {AaqMovie.class}, version = 1)
-
+//I read here: https://mobikul.com/add-typeconverters-room-database-android/
+//this may be done in POJO (that's what I did)
+@TypeConverters({GenreConverter.class, SpokenLangConverter.class})
 public abstract class FavoriteMovieDb extends RoomDatabase {
 
     private static FavoriteMovieDb sINSTANCE;

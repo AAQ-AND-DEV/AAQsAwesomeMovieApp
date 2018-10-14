@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
 import android.content.pm.FeatureGroupInfo;
 import android.databinding.ObservableBoolean;
@@ -15,6 +16,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.aaqanddev.aaqsawesomeandroidapp.Utilities.DataConverter;
+import com.aaqanddev.aaqsawesomeandroidapp.Utilities.converters.GenreConverter;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -37,6 +41,7 @@ public class AaqMovie implements Parcelable  {
         this.title = title;
     }
 
+    @Ignore
     private AaqMovie result;
 
     @Ignore
@@ -47,8 +52,12 @@ public class AaqMovie implements Parcelable  {
         this.title = title;
         this.voteAverage = voteAverage;
     }
-    
-    private MutableLiveData<Boolean> isFavorite;
+
+    //is there a benefit to
+    //how to store this field into database
+    //type converter for MutableLiveData
+
+    private Boolean isFavorite;
 
     //TODO (finish sample code for java version of https://android.jlelse.eu/android-architecture-components-livedata-with-data-binding-7bf85871bbd8
     //MutableLiveData<String> kittyName = new MutableLiveData<String>();
@@ -69,9 +78,12 @@ public class AaqMovie implements Parcelable  {
     @SerializedName("budget")
     @Expose
     private Integer budget;
+
+    //DTMS?
+    //changed this to instantiate a new ArrayList instead of null?
     @SerializedName("genres")
     @Expose
-    private List<Genre> genres = null;
+    private List<Genre> genres = new ArrayList<Genre>();
     /*
     @SerializedName("homepage")
     @Expose
@@ -345,14 +357,18 @@ public class AaqMovie implements Parcelable  {
         this.voteCount = voteCount;
     }
     //endregion
+
     //TODO <Q> this correct? not mutable, since in model
-    public MutableLiveData<Boolean> getIsFavorite() {
+    public Boolean getIsFavorite() {
        //idk do i have to catch null here?
         // I don't think bool can be null
+        //is it appropriate for this to be
+        //referring to the repo? I don't think so
         return isFavorite;
     }
 
-    public void setIsFavorite(MutableLiveData<Boolean> favorite) {
+    public void setIsFavorite(Boolean favorite)
+    {
         isFavorite = favorite;
     }
 
@@ -401,7 +417,7 @@ public class AaqMovie implements Parcelable  {
     }
 
     protected AaqMovie(Parcel in) {
-        this.isFavorite = (MutableLiveData<Boolean>) in.readValue(Boolean.class.getClassLoader());
+        this.isFavorite = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.adult = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.backdropPath = in.readString();
         //this.belongsToCollection = in.readParcelable(Object.class.getClassLoader());

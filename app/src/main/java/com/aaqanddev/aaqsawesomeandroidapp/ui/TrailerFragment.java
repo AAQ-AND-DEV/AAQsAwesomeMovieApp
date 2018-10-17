@@ -6,7 +6,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,7 +19,8 @@ import android.view.ViewGroup;
 import com.aaqanddev.aaqsawesomeandroidapp.Adapters.TrailersAdapter;
 import com.aaqanddev.aaqsawesomeandroidapp.R;
 import com.aaqanddev.aaqsawesomeandroidapp.Utilities.VideoFetchIntentHelper;
-import com.aaqanddev.aaqsawesomeandroidapp.ViewModels.DetailMovieViewModel;
+import com.aaqanddev.aaqsawesomeandroidapp.DetailMovieViewModel;
+import com.aaqanddev.aaqsawesomeandroidapp.databinding.FragmentTrailersBinding;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieTrailer;
 
 import java.util.List;
@@ -41,6 +41,7 @@ public class TrailerFragment extends Fragment{
     //OR not here at all, so it's not holding data?
     List<AaqMovieTrailer> mTrailers;
     DetailMovieViewModel mDetailModel;
+
     FragmentTrailersBinding binding;
 
     public static TrailerFragment newInstance(int id) {
@@ -101,13 +102,14 @@ public class TrailerFragment extends Fragment{
                             ytLaunchHelper.watchVideo(view.getContext(), pos);
                         }
                     });
-                    trailers_rv.setAdapter(adapter);
+                    binding.trailersRV.setAdapter(adapter);
                     //idk this will enact new View creation, right?
                     adapter.notifyDataSetChanged();
                 }
 
             }
         });
+        binding.setViewModel(mDetailModel);
     }
 
     private class YtVidFetchIntentHelperImpl implements VideoFetchIntentHelper{

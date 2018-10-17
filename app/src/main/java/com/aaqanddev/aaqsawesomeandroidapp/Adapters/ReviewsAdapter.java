@@ -1,20 +1,14 @@
 package com.aaqanddev.aaqsawesomeandroidapp.Adapters;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.aaqanddev.aaqsawesomeandroidapp.R;
-import com.aaqanddev.aaqsawesomeandroidapp.ViewModels.DetailMovieViewModel;
 import com.aaqanddev.aaqsawesomeandroidapp.databinding.ReviewsRvItemBinding;
-import com.aaqanddev.aaqsawesomeandroidapp.databinding.TrailersRvItemBinding;
-import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieReview;
 
 import java.util.List;

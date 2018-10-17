@@ -4,9 +4,11 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Transformations;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import com.aaqanddev.aaqsawesomeandroidapp.AaqMovieApp;
 import com.aaqanddev.aaqsawesomeandroidapp.Db.FavoriteMovieDb;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieList;
@@ -21,16 +23,19 @@ public class FaveMovieListViewModel extends AndroidViewModel {
 
     public FaveMovieListViewModel(@NonNull Application application) {
         super(application);
-        faveDb = FavoriteMovieDb.getDb(application);
+        faveDb = FavoriteMovieDb.getDb(application,
+                ((AaqMovieApp)application).getAppExecutors());
         //done setValue  on MutableLiveData
         //TODO(Q) did postValue instead -- since I think this
-        //will end up on background  thread
-        faveMovieList.postValue();faveDb.faveMovieDao().getAllFaveMovies();
+        //will end up on background thread
+        }
+
+    public LiveData<List<AaqMovie>> getFaveMovieList(){
+        //should this also offer up the faveMovieLife (but how would I know
+        //if it has been changed...)
+        return faveDb.faveMovieDao().getAllFaveMovies();
     }
 
-    public LiveData<AaqMovieList> getFaveMovieList(){
-        return faveMovieList;
-    }
 
     public void deleteItem(AaqMovie movie){
         new deleteAsyncTask(faveDb).execute(movie);

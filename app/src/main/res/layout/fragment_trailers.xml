@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.aaqanddev.aaqsawesomeandroidapp.ViewModels.DetailMovieViewModel"></variable>
+            type="com.aaqanddev.aaqsawesomeandroidapp.DetailMovieViewModel"></variable>
     </data>
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"

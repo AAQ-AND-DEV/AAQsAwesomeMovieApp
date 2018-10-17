@@ -1,4 +1,4 @@
-package com.aaqanddev.aaqsawesomeandroidapp.ViewModels;
+package com.aaqanddev.aaqsawesomeandroidapp;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
@@ -27,7 +27,7 @@ import java.util.concurrent.Executor;
 public class DetailMovieViewModel extends AndroidViewModel {
 
     //TODO (u) incorporate a LiveData<List<int>> with ids stored, to check
-    //faveStatus instead of db  check?
+    //faveStatus instead of db check?
     private final LiveData<Boolean> mIsFave;
     public  ObservableField<Boolean> isFave = new ObservableField<>();
 
@@ -42,6 +42,12 @@ public class DetailMovieViewModel extends AndroidViewModel {
     //to connote set up but not altered
     private final MutableLiveData<Integer> mMovieId;
 
+    //LiveData<ViewModel>?
+
+    //setViewModel TODO
+    public void setViewModel(){
+
+    }
     //should this be in repo?  I think so... or it should make a call to repo to do so...
     public void setMovieId(Integer movieId) {
         //here avoiding unecessary trigger of observers
@@ -56,7 +62,6 @@ public class DetailMovieViewModel extends AndroidViewModel {
     //with
     public ObservableField<Integer> movieId = new ObservableField<>();
 
-
     private AaqMovieRepo mRepo;
     private FavoriteMoviesDao mFaveMovieDao;
 
@@ -67,6 +72,11 @@ public class DetailMovieViewModel extends AndroidViewModel {
     //should be triggered by delta to movieID
     private ObservableInt progressBarVisibility;
     private ObservableInt detailsVisibity;
+
+    public DetailMovieViewModel(Application application){
+        this((AaqMovieApp) application, AaqMovieRepo.getInstance(application, ((AaqMovieApp)application).getAppExecutors()));
+
+    }
 
     public DetailMovieViewModel(@NonNull AaqMovieApp app, AaqMovieRepo repo) {
         super(app);

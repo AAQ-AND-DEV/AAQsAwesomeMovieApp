@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 
 import com.aaqanddev.aaqsawesomeandroidapp.Adapters.ReviewsAdapter;
 import com.aaqanddev.aaqsawesomeandroidapp.R;
-import com.aaqanddev.aaqsawesomeandroidapp.ViewModels.DetailMovieViewModel;
+import com.aaqanddev.aaqsawesomeandroidapp.DetailMovieViewModel;
 import com.aaqanddev.aaqsawesomeandroidapp.databinding.FragmentReviewsBinding;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovieReview;
 
@@ -46,6 +46,10 @@ public class ReviewsFragment extends Fragment {
         f.setArguments(args);
         return f;
     }
+
+    //setViewModel
+
+    //initViewModel? pass in?
 
     //should this Observer be private?
     private final Observer<List<AaqMovieReview>> mReviewsObserver = new Observer<List<AaqMovieReview>>() {
@@ -81,6 +85,7 @@ public class ReviewsFragment extends Fragment {
         //or does dataBinding do it?
         mBinding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_reviews, container, false);
+        //should I bind viewModel here?
 
         return mBinding.getRoot();
     }
@@ -106,6 +111,7 @@ public class ReviewsFragment extends Fragment {
             }
         }
         //TODO  (rf) update the viewModel with the reviewsAdapter?
+        mBinding.setViewModel(vm);
         initRV();
 
     }

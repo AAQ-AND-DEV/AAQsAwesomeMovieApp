@@ -9,6 +9,9 @@
         <variable
             name="movie"
             type="com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie"/>
+        <variable
+            name="viewModel"
+            type="com.aaqanddev.aaqsawesomeandroidapp.DetailMovieViewModel"/>
     </data>
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"

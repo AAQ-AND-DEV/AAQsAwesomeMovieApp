@@ -42,12 +42,7 @@ public class DetailMovieViewModel extends AndroidViewModel {
     //to connote set up but not altered
     private final MutableLiveData<Integer> mMovieId;
 
-    //LiveData<ViewModel>?
 
-    //setViewModel TODO
-    public void setViewModel(){
-
-    }
     //should this be in repo?  I think so... or it should make a call to repo to do so...
     public void setMovieId(Integer movieId) {
         //here avoiding unecessary trigger of observers
@@ -57,10 +52,13 @@ public class DetailMovieViewModel extends AndroidViewModel {
         this.mMovieId.setValue(movieId);
     }
 
+    public LiveData<Integer> getMovieId(){
+        return this.mMovieId;
+    }
     //i think this observer approach mirrors what is done in detailActivity
     //only applied to a Retrofit
     //with
-    public ObservableField<Integer> movieId = new ObservableField<>();
+    //public ObservableField<Integer> movieId = new ObservableField<>();
 
     private AaqMovieRepo mRepo;
     private FavoriteMoviesDao mFaveMovieDao;

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <!--TODO (U) add a spinner for choosing Sort Method?
-     TODO (I) hard code in toggle via prefs or simply a spinnerAdapter?
-
+    <!--
+    null here currently
     -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

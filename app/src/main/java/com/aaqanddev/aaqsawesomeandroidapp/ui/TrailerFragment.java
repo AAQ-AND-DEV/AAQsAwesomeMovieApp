@@ -58,7 +58,7 @@ public class TrailerFragment extends Fragment{
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         //should I grab from viewModel?
-        outState.putInt(MOVIE_ID_BUNDLE_KEY, mDetailModel.movieId.get());
+        outState.putInt(MOVIE_ID_BUNDLE_KEY, mDetailModel.getMovieId().getValue());
     }
 
     @Nullable

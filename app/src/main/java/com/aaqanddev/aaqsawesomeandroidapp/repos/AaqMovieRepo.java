@@ -44,7 +44,7 @@ public class AaqMovieRepo {
     private LiveData<Boolean> mHasInternet;
 
     //mediator for AllFaves (for use with the MoviesActivity call to Faves)
-    private static MediatorLiveData<AaqMovieList> mAllObservableFaveMovies;
+    private static MediatorLiveData<List<AaqMovie>> mAllObservableFaveMovies;
 
     private MediatorLiveData<Boolean> mIsFave;
     //mediator for DetailMovie

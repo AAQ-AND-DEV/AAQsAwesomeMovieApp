@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,8 +36,7 @@ public class TrailerFragment extends Fragment{
     private static final String MOVIE_V_M_SYMB = "movieViewModelSymbol";
     private static final String MOVIE_ID_BUNDLE_KEY = "bundleMovieKey";
 
-    TrailersAdapter adapter;
-    RecyclerView trailersRV;
+    private static TrailersAdapter mAdapter;
     //TODO  I should have this LiveData (I believe)
     //OR not here at all, so it's not holding data?
     List<AaqMovieTrailer> mTrailers;
@@ -44,15 +44,21 @@ public class TrailerFragment extends Fragment{
 
     FragmentTrailersBinding binding;
 
-    public static TrailerFragment newInstance(int id) {
-        TrailerFragment f = new TrailerFragment();
+    //DTMS? can I access the viewModel here?
 
+    public static TrailerFragment newInstance(int id, TrailersAdapter adapter) {
+        mAdapter = adapter;
+        TrailerFragment f = new TrailerFragment();
         Bundle args = new Bundle();
         args.putInt(MOVIE_ID_BUNDLE_KEY, id);
         f.setArguments(args);
+        //do i need to setModel or anything?
         return f;
     }
-    public TrailerFragment(){}
+
+    public TrailerFragment(){
+
+    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -65,10 +71,14 @@ public class TrailerFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //Do I need to explicitly       //deploy the mMainThread
-        //for View stuff?  I'm going to go with no...and assume Android runs fragments always main.
-        //actually, I think this will be the binding
-        //I was  getting the binding elsewhere!
+
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_trailers, container, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        binding.trailersRV.setLayoutManager(linearLayoutManager);
+        binding.trailersRV.setHasFixedSize(true);
+        binding.trailersRV.setAdapter(mAdapter);
+
         return binding.getRoot();
 
         //TODO probly grab the Bundle for accessing trailer info
@@ -80,6 +90,16 @@ public class TrailerFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if (savedInstanceState == null){
+
+        }
+
+        //for View stuff?  I'm going to go with no...and assume Android runs fragments always main.
+        //actually, I think this will be the binding
+        //I was  getting the binding elsewhere!
+        //should I be passing in an id to my adapter?
+
+
         //get RecyclerView
         //RecyclerView trailers_rv =
 
@@ -89,11 +109,12 @@ public class TrailerFragment extends Fragment{
             public void onChanged(@Nullable List<AaqMovieTrailer> aaqMovieTrailers) {
                 if (aaqMovieTrailers != null){
                     //instantiate a new Adapter and all
-                    adapter = new TrailersAdapter(aaqMovieTrailers);
+
+                    mAdapter = new TrailersAdapter(aaqMovieTrailers);
                     //Should I actually be making a swapAdapter()
                     // or using swapLists() method ?
                     //
-                    adapter.setmTrailerClickListener(new TrailersAdapter.TrailersRVClickListener() {
+                    mAdapter.setmTrailerClickListener(new TrailersAdapter.TrailersRVClickListener() {
                         @Override
                         public void onItemClick(View view, int pos) {
                             //TODO (finally so close...)
@@ -102,9 +123,10 @@ public class TrailerFragment extends Fragment{
                             ytLaunchHelper.watchVideo(view.getContext(), pos);
                         }
                     });
-                    binding.trailersRV.setAdapter(adapter);
+                    binding.trailersRV.setAdapter(mAdapter);
                     //idk this will enact new View creation, right?
-                    adapter.notifyDataSetChanged();
+                    //I think I want to do this
+                    mAdapter.notifyDataSetChanged();
                 }
 
             }

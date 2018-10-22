@@ -13,6 +13,8 @@ import android.support.annotation.NonNull;
 
 import com.aaqanddev.aaqsawesomeandroidapp.AaqMovieApp;
 import com.aaqanddev.aaqsawesomeandroidapp.AaqMovieAppExecutors;
+import com.aaqanddev.aaqsawesomeandroidapp.Adapters.ReviewsAdapter;
+import com.aaqanddev.aaqsawesomeandroidapp.Adapters.TrailersAdapter;
 import com.aaqanddev.aaqsawesomeandroidapp.Db.FavoriteMovieDb;
 import com.aaqanddev.aaqsawesomeandroidapp.Interfaces.FavoriteMoviesDao;
 import com.aaqanddev.aaqsawesomeandroidapp.pojo.AaqMovie;
@@ -28,12 +30,15 @@ public class DetailMovieViewModel extends AndroidViewModel {
 
     //TODO (u) incorporate a LiveData<List<int>> with ids stored, to check
     //faveStatus instead of db check?
+    //Randy said these had to be used for Transformation.switchMap()
+    //changed to public, rather than a getter
+
     private final LiveData<Boolean> mIsFave;
-    public  ObservableField<Boolean> isFave = new ObservableField<>();
+    //public  ObservableField<Boolean> isFave = new ObservableField<>();
 
     //
     private final LiveData<AaqMovie> mObservableMovie;
-    public ObservableField<AaqMovie> movie = new ObservableField<>();
+    //public ObservableField<AaqMovie> movie = new ObservableField<>();
     //is this an ok value (default seems to be random, possibly  3-digit)
     //seen other examples use zero
     private static final int NOT_SET_CONST = -2;
@@ -71,9 +76,20 @@ public class DetailMovieViewModel extends AndroidViewModel {
     private ObservableInt progressBarVisibility;
     private ObservableInt detailsVisibity;
 
+    //TODO ? should I add vars for Adapters for Trailers and Reviews?
+    TrailersAdapter trailersAdapter;
+    ReviewsAdapter reviewsAdapter;
+
     public DetailMovieViewModel(Application application){
         this((AaqMovieApp) application, AaqMovieRepo.getInstance(application, ((AaqMovieApp)application).getAppExecutors()));
 
+    }
+
+    public void setTrailersAdapter(TrailersAdapter trailersAdapter){
+        this.trailersAdapter = trailersAdapter;
+    }
+    public void setReviewsAdapter(ReviewsAdapter reviewsAdapter){
+        this.reviewsAdapter = reviewsAdapter;
     }
 
     public DetailMovieViewModel(@NonNull AaqMovieApp app, AaqMovieRepo repo) {
@@ -119,12 +135,12 @@ public class DetailMovieViewModel extends AndroidViewModel {
     public LiveData<AaqMovie> getObservableMovie(int id){
 
         //null check --
-        if (mObservableMovie == null){
+        if (this.mObservableMovie == null){
             //make a repo call
             return mRepo.getDetailMovie(id);
         }
         //otherwise, return movie
-        return mObservableMovie;
+        return this.mObservableMovie;
     }
 
     //DTMS? using the mMovieId LiveData for the ViewModel (where can I set this?)
@@ -156,6 +172,7 @@ public class DetailMovieViewModel extends AndroidViewModel {
         return mIsFave;
     }
 
+    public void updateTrailers(){}
     //I think what I planned on doing here
     //i'm actually doing in onClick from
     //moviesActivity RV

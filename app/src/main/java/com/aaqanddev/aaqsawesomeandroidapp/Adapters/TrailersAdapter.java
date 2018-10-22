@@ -17,6 +17,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
 
     private List<AaqMovieTrailer> mTrailers;
     private TrailersRvItemBinding binding;
+    private RecyclerView mRv;
 
     TrailersRVClickListener mTrailerClickListener;
 
@@ -31,6 +32,9 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
         return mTrailers;
     }
 
+    public static void setTrailersList(List<AaqMovieTrailer> trailers){
+
+    }
     @NonNull
     @Override
     public TrailerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -49,7 +53,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
         //no...this member variable should suffice
         if (mTrailers != null){
             AaqMovieTrailer trailer = mTrailers.get(pos);
-            holder.binding.setTrailer(trailer);
+            holder.bind(pos);
             //DTMS?
             holder.binding.executePendingBindings();
 
